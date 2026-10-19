@@ -116,7 +116,153 @@ footer { font-size: 0.82rem; color: var(--ink-3); text-align: center; }
 </header>
 <section class="market" aria-label="大盤"><div class="idx"><span class="n">S&amp;P 500（SPY）</span><span class="p">763.25</span><span class="c down">▼ 1.11%</span></div><div class="idx"><span class="n">那斯達克（QQQ）</span><span class="p">709.80</span><span class="c down">▼ 2.50%</span></div><div class="idx"><span class="n">恐慌指數（VIX）</span><span class="p">19.99</span><span class="c up">▲ 21.45%</span></div></section>
 <p class="mood"><b>大盤氣氛：平穩偏多。</b>S&amp;P 500 在長期趨勢線之上，恐慌指數偏低。</p>
-<section class="today"><h2>今日買賣建議</h2><ul><li><span class="dot warn">—</span><p><b>今天沒有買賣建議。</b>只有在財報公布後、市場反應和股價走勢同方向時才會出現，大部分日子是持有或觀望。</p></li></ul></section>
+
+<style>
+[hidden] { display: none !important; }
+.mine { background: var(--card); border: 2px solid var(--brand); border-radius: 14px; padding: 20px; display: grid; gap: 14px; }
+.mine h2 { font-size: 1.2rem; }
+.row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.row input, .row select { font: inherit; padding: 6px 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); color: var(--ink); min-width: 0; }
+.row input[type=number] { width: 7.5rem; }
+#mTicker { width: 11rem; }
+.btn { font: inherit; padding: 6px 14px; border-radius: 8px; border: 1px solid var(--brand); background: var(--brand); color: var(--card); cursor: pointer; }
+.btn.ghost { background: transparent; color: var(--brand); }
+.btn.small { padding: 2px 10px; font-size: 0.85rem; }
+.btn:focus-visible, .row input:focus-visible, .row select:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+.msg { font-size: 0.9rem; color: var(--ink-2); }
+.hold-tbl { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+.hold-tbl th, .hold-tbl td { padding: 8px 6px; border-bottom: 1px solid var(--line); text-align: right; white-space: nowrap; }
+.hold-tbl th:first-child, .hold-tbl td:first-child { text-align: left; }
+.hold-tbl th { color: var(--ink-3); font-weight: 500; font-size: 0.8rem; }
+.hold-tbl td { font-family: var(--font-num); font-variant-numeric: tabular-nums; }
+.tbl-wrap { overflow-x: auto; }
+.mine .stock { position: relative; }
+.mine .stock .rm { position: absolute; top: 10px; right: 10px; }
+.mine .stock .top { padding-right: 3.5rem; }
+</style>
+<section class="mine" aria-labelledby="h-mine">
+  <div class="group-head"><h2 id="h-mine">我的清單</h2><span>資料只存在這台裝置的瀏覽器，不會上傳</span></div>
+  <div class="row">
+    <label for="mUser">使用者</label>
+    <select id="mUser"></select>
+    <button class="btn ghost small" id="mNewUser" type="button">新增使用者</button>
+    <button class="btn ghost small" id="mDelUser" type="button">刪除這個使用者</button>
+  </div>
+  <div class="row" id="mNewUserRow" hidden>
+    <input id="mNewName" placeholder="使用者名稱，例如：爸爸" maxlength="20">
+    <button class="btn small" id="mNewOk" type="button">建立</button>
+  </div>
+  <form class="row" id="mForm">
+    <input id="mTicker" list="mList" placeholder="股票代號，例如 NVDA" autocomplete="off" required>
+    <datalist id="mList"></datalist>
+    <input id="mShares" type="number" min="0" step="any" placeholder="股數（選填）">
+    <input id="mCost" type="number" min="0" step="any" placeholder="買進均價（選填）">
+    <button class="btn" type="submit">加入</button>
+  </form>
+  <p class="msg" id="mMsg">有填股數就算持股（會算損益），沒填就是觀察清單。可選 S&amp;P 100 約 100 檔。</p>
+  <div class="tbl-wrap" id="mHold" hidden></div>
+  <div class="cards" id="mCards"></div>
+</section>
+<script>
+(function () {
+  var KEY = "usd-users-v1", data = null, state = load();
+  function load() {
+    try { var s = JSON.parse(localStorage.getItem(KEY)); if (s && s.users) return s; } catch (e) {}
+    return { current: "我", users: { "我": [] } };
+  }
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {} }
+  function $(id) { return document.getElementById(id); }
+  function esc(t) { var d = document.createElement("div"); d.textContent = t; return d.innerHTML; }
+  function money(v) { return "$" + v.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+  function list() { return state.users[state.current] || (state.users[state.current] = []); }
+
+  function renderUsers() {
+    var sel = $("mUser"); sel.innerHTML = "";
+    Object.keys(state.users).forEach(function (u) {
+      var o = document.createElement("option"); o.value = u; o.textContent = u; o.selected = u === state.current; sel.appendChild(o);
+    });
+    $("mDelUser").hidden = Object.keys(state.users).length < 2;
+  }
+
+  function render() {
+    renderUsers();
+    var items = list(), cards = $("mCards"), hold = $("mHold");
+    if (!data) { cards.innerHTML = '<p class="msg">正在讀取今天的資料…</p>'; return; }
+    if (!items.length) {
+      cards.innerHTML = '<p class="msg">「' + esc(state.current) + '」還沒有清單。在上面輸入代號（例如 NVDA、AAPL、KO）加入。</p>';
+      hold.hidden = true; return;
+    }
+    var rows = "", tv = 0, tc = 0, html = "", trades = [];
+    items.forEach(function (it, i) {
+      var d = data.stocks[it.t]; if (!d) return;
+      if (d.action === "buy" || d.action === "sell") trades.push(d.name + "（" + it.t + "）" + (d.action === "buy" ? "可考慮買進" : "可考慮賣出／減碼"));
+      html += d.card.replace('<article class="stock">', '<article class="stock"><button class="btn ghost small rm" type="button" data-i="' + i + '">移除</button>');
+      if (it.sh > 0) {
+        var v = it.sh * d.close, line = '<td>' + esc(d.name) + ' ' + it.t + '</td><td>' + it.sh + '</td><td>' + money(d.close) + '</td><td>' + money(v) + '</td>';
+        tv += v;
+        if (it.cost > 0) {
+          var c = it.sh * it.cost, pl = v - c, cls = pl >= 0 ? "up" : "down";
+          tc += c;
+          line += '<td class="' + cls + '">' + (pl >= 0 ? "+" : "") + money(pl).replace("$-", "-$") + '（' + (pl / c * 100).toFixed(1) + '%）</td>';
+        } else { line += '<td>—</td>'; }
+        rows += '<tr>' + line + '</tr>';
+      }
+    });
+    if (rows) {
+      var sum = tc > 0 ? ((tv - tc) >= 0 ? "+" : "") + ((tv - tc) / tc * 100).toFixed(1) + "%" : "—";
+      hold.innerHTML = '<table class="hold-tbl"><thead><tr><th>持股</th><th>股數</th><th>現價</th><th>市值</th><th>損益（依買進均價）</th></tr></thead><tbody>' + rows +
+        '<tr><td><b>合計</b></td><td></td><td></td><td>' + money(tv) + '</td><td>' + sum + '</td></tr></tbody></table>';
+      hold.hidden = false;
+    } else { hold.hidden = true; }
+    var head = trades.length ? '<p class="alert">你的清單今天有買賣建議：' + esc(trades.join("、")) + '</p>' : "";
+    cards.innerHTML = head + html;
+  }
+
+  function msg(t) { $("mMsg").textContent = t; }
+
+  $("mForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var raw = $("mTicker").value.trim().toUpperCase().split(/\s/)[0].replace(".", "-");
+    if (!data || !data.stocks[raw]) { msg("找不到「" + raw + "」。目前只能選 S&P 100 的股票，可以從下拉清單挑。"); return; }
+    var sh = parseFloat($("mShares").value) || 0, cost = parseFloat($("mCost").value) || 0, items = list();
+    var old = items.filter(function (x) { return x.t === raw; })[0];
+    if (old) { old.sh = sh; old.cost = cost; msg("已更新 " + raw + "。"); }
+    else { items.push({ t: raw, sh: sh, cost: cost }); msg("已加入 " + raw + (sh > 0 ? "（持股）" : "（觀察）") + "。"); }
+    $("mTicker").value = ""; $("mShares").value = ""; $("mCost").value = "";
+    save(); render();
+  });
+  $("mCards").addEventListener("click", function (e) {
+    var b = e.target.closest(".rm"); if (!b) return;
+    var it = list().splice(+b.getAttribute("data-i"), 1)[0]; save(); render(); msg("已移除 " + it.t + "。");
+  });
+  $("mUser").addEventListener("change", function () { state.current = this.value; save(); render(); msg("切換到「" + state.current + "」。"); });
+  $("mNewUser").addEventListener("click", function () { $("mNewUserRow").hidden = false; $("mNewName").focus(); });
+  $("mNewOk").addEventListener("click", function () {
+    var n = $("mNewName").value.trim();
+    if (!n) { msg("請輸入使用者名稱。"); return; }
+    if (state.users[n]) { msg("「" + n + "」已經存在。"); return; }
+    state.users[n] = []; state.current = n; $("mNewName").value = ""; $("mNewUserRow").hidden = true; save(); render();
+    msg("已建立「" + n + "」，可以開始加入股票。");
+  });
+  var armed = false;
+  $("mDelUser").addEventListener("click", function () {
+    if (!armed) { armed = true; this.textContent = "再按一次確認刪除「" + state.current + "」"; return; }
+    armed = false; this.textContent = "刪除這個使用者";
+    var gone = state.current; delete state.users[gone]; state.current = Object.keys(state.users)[0]; save(); render();
+    msg("已刪除「" + gone + "」。");
+  });
+
+  render();
+  fetch("data.json", { cache: "no-store" }).then(function (r) { return r.json(); }).then(function (d) {
+    data = d;
+    var dl = $("mList");
+    Object.keys(d.stocks).sort().forEach(function (t) { var o = document.createElement("option"); o.value = t; o.label = d.stocks[t].name; dl.appendChild(o); });
+    render();
+  }).catch(function () { $("mCards").innerHTML = '<p class="msg">讀不到今天的資料，請稍後重新整理。</p>'; });
+})();
+</script>
+
+<section class="today"><h2>十大股票今日買賣建議</h2><ul><li><span class="dot warn">—</span><p><b>今天沒有買賣建議。</b>只有在財報公布後、市場反應和股價走勢同方向時才會出現，大部分日子是持有或觀望。</p></li></ul></section>
 <section class="today"><h2>今天的重點</h2><ul><li><span class="dot down">▼</span><p><b>台積電 ADR（TSM）財報反應：弱。</b>市場反應很差，接下來約一個月偏向延續走弱（這是回測裡唯一有效的訊號，但只是勝算稍高，不是穩賺）。</p></li><li><span class="dot down">▼</span><p><b>Google（GOOGL）</b>股價跌破中期平均價。</p></li><li><span class="dot down">▼</span><p><b>Google（GOOGL）</b>短期動能轉弱。</p></li><li><span class="dot down">▼</span><p><b>特斯拉（TSLA）</b>股價跌破中期平均價。</p></li><li><span class="dot warn">!</span><p><b>Meta（META）2 天後公布財報。</b>財報公布後第一天的漲跌方向，是回測裡最有參考價值的訊號。</p></li><li><span class="dot warn">!</span><p><b>特斯拉（TSLA）2 天後公布財報。</b>財報公布後第一天的漲跌方向，是回測裡最有參考價值的訊號。</p></li></ul></section>
 
 <section class="group">
