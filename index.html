@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>美股十大日報</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+/* 版面：手機優先的單欄日報。大盤一行 → 今日重點 → 依「偏多／觀望／偏空」分組的個股卡。台股習慣：紅漲綠跌 */
+:root {
+  --bg: #f4f6f8;
+  --card: #ffffff;
+  --ink: #1a1f26;
+  --ink-2: #505a66;
+  --ink-3: #87909b;
+  --line: #e1e5ea;
+  --up: #d63a3a;
+  --up-soft: #fdeceb;
+  --down: #1a8f5a;
+  --down-soft: #e3f4ea;
+  --wait: #6b7480;
+  --wait-soft: #eceff2;
+  --warn: #b76e00;
+  --warn-soft: #fdf1dc;
+  --brand: #20324d;
+  --font-head: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+  --font-num: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #11151a; --card: #1a2027; --ink: #e8ecf0; --ink-2: #aeb7c1; --ink-3: #7c8691; --line: #2b333c;
+    --up: #ff6b6b; --up-soft: #3a1d1f; --down: #3ccf8a; --down-soft: #15301f; --wait: #9aa4ae; --wait-soft: #262d35;
+    --warn: #f0b24a; --warn-soft: #36290f; --brand: #a9c3ea; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #11151a; --card: #1a2027; --ink: #e8ecf0; --ink-2: #aeb7c1; --ink-3: #7c8691; --line: #2b333c;
+  --up: #ff6b6b; --up-soft: #3a1d1f; --down: #3ccf8a; --down-soft: #15301f; --wait: #9aa4ae; --wait-soft: #262d35;
+  --warn: #f0b24a; --warn-soft: #36290f; --brand: #a9c3ea; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink); font-family: var(--font-head); font-size: 16px; line-height: 1.7;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 28px 56px;
+}
+.wrap { max-width: 760px; margin: 0 auto; display: grid; gap: 28px; }
+h1, h2, h3 { margin: 0; text-wrap: balance; line-height: 1.3; }
+p { margin: 0; }
+.num { font-family: var(--font-num); font-variant-numeric: tabular-nums; }
+.up { color: var(--up); } .down { color: var(--down); }
+
+header { display: grid; gap: 6px; }
+.date { font-size: 0.9rem; color: var(--ink-3); }
+h1 { font-size: clamp(1.8rem, 6vw, 2.4rem); font-weight: 900; color: var(--brand); }
+.sub { color: var(--ink-2); }
+
+.market { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.idx { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; display: grid; gap: 2px; min-width: 0; }
+.idx .n { font-size: 0.8rem; color: var(--ink-3); }
+.idx .p { font-family: var(--font-num); font-size: 1.15rem; font-weight: 600; }
+.idx .c { font-family: var(--font-num); font-size: 0.85rem; }
+.mood { font-size: 0.95rem; color: var(--ink-2); }
+.mood b { color: var(--ink); }
+
+.today { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 20px; display: grid; gap: 12px; }
+.today h2 { font-size: 1.15rem; }
+.today ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; }
+.today li { display: grid; grid-template-columns: 2.2rem minmax(0, 1fr); gap: 10px; align-items: start; }
+.dot { width: 2.2rem; height: 2.2rem; border-radius: 50%; display: grid; place-items: center; font-weight: 700; font-size: 0.85rem; }
+.dot.up { background: var(--up-soft); } .dot.down { background: var(--down-soft); } .dot.warn { background: var(--warn-soft); color: var(--warn); }
+
+.group { display: grid; gap: 12px; }
+.group-head { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.group-head h2 { font-size: 1.3rem; }
+.group-head span { color: var(--ink-3); font-size: 0.9rem; }
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 20rem), 1fr)); gap: 12px; }
+
+.stock { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 18px; display: grid; gap: 12px; align-content: start; min-width: 0; }
+.top { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+.name b { font-size: 1.25rem; font-weight: 900; display: block; line-height: 1.2; }
+.name small { color: var(--ink-3); font-size: 0.85rem; }
+.price { text-align: right; }
+.price .p { font-family: var(--font-num); font-size: 1.2rem; font-weight: 600; display: block; }
+.price .c { font-family: var(--font-num); font-size: 0.9rem; }
+.tag { display: inline-block; font-weight: 700; font-size: 0.9rem; padding: 3px 12px; border-radius: 999px; width: fit-content; }
+.tag.buy { background: var(--up-soft); color: var(--up); }
+.tag.hold { background: var(--wait-soft); color: var(--wait); }
+.tag.avoid { background: var(--down-soft); color: var(--down); }
+.why { margin: 0; padding-left: 1.1em; display: grid; gap: 4px; font-size: 0.95rem; }
+.why li::marker { color: var(--ink-3); }
+.line { font-size: 0.9rem; color: var(--ink-2); border-top: 1px dashed var(--line); padding-top: 10px; display: grid; gap: 4px; }
+.line b { color: var(--ink); font-weight: 500; }
+.alert { font-size: 0.88rem; background: var(--warn-soft); color: var(--warn); border-radius: 8px; padding: 6px 10px; }
+
+.how { font-size: 0.9rem; color: var(--ink-2); background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 18px 20px; display: grid; gap: 8px; }
+.how h2 { font-size: 1.05rem; color: var(--ink); }
+.how ul { margin: 0; padding-left: 1.1em; display: grid; gap: 4px; }
+footer { font-size: 0.82rem; color: var(--ink-3); text-align: center; }
+
+@media (max-width: 480px) {
+  .market { grid-template-columns: 1fr 1fr 1fr; gap: 6px; }
+  .idx { padding: 10px; }
+  .idx .p { font-size: 1rem; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <span class="date">2026 年 10 月 16 日（五）美股收盤｜台灣時間 10/17 早上更新</span>
+  <h1>美股十大日報</h1>
+  <p class="sub">每天幫你看美國市值最大的 10 家公司：今天發生什麼事、哪些走勢偏強、哪些先避開。</p>
+</header>
+<section class="market" aria-label="大盤"><div class="idx"><span class="n">S&amp;P 500（SPY）</span><span class="p">763.25</span><span class="c down">▼ 1.11%</span></div><div class="idx"><span class="n">那斯達克（QQQ）</span><span class="p">709.80</span><span class="c down">▼ 2.50%</span></div><div class="idx"><span class="n">恐慌指數（VIX）</span><span class="p">19.99</span><span class="c up">▲ 21.45%</span></div></section>
+<p class="mood"><b>大盤氣氛：平穩偏多。</b>S&amp;P 500 在長期趨勢線之上，恐慌指數偏低。</p>
+<section class="today"><h2>今天的重點</h2><ul><li><span class="dot down">▼</span><p><b>Google（GOOGL）</b>股價跌破中期平均價。</p></li><li><span class="dot down">▼</span><p><b>Google（GOOGL）</b>短期動能轉弱。</p></li><li><span class="dot down">▼</span><p><b>特斯拉（TSLA）</b>股價跌破中期平均價。</p></li><li><span class="dot warn">!</span><p><b>Meta（META）3 天後公布財報。</b>財報公布後第一天的漲跌方向，是回測裡最有參考價值的訊號。</p></li><li><span class="dot warn">!</span><p><b>特斯拉（TSLA）3 天後公布財報。</b>財報公布後第一天的漲跌方向，是回測裡最有參考價值的訊號。</p></li></ul></section>
+
+<section class="group">
+  <div class="group-head"><h2 class="up">偏多</h2><span>4 檔｜走勢偏強，可續抱或列入觀察名單</span></div>
+  <div class="cards">
+    <article class="stock">
+      <div class="top"><div class="name"><b>蘋果</b><small>AAPL</small></div><div class="price"><span class="p">$343.46</span><span class="c up">▲ 0.43%</span></div></div>
+      <span class="tag buy">偏多｜10 檔中最強</span>
+      <ul class="why"><li>長期走勢向上</li><li>中長期走勢同步向上</li><li>離一年來最高點只差 1.3%</li></ul>
+      <div class="line"><span><b>看錯的訊號：</b>收盤跌破 $325.69</span><span><b>分析師平均目標價：</b>$329.38（已經超過目標價 4%）</span></div>
+      <span class="line" style="border:0;padding:0">下次財報 11/2（15 天後）</span>
+    </article>
+    <article class="stock">
+      <div class="top"><div class="name"><b>微軟</b><small>MSFT</small></div><div class="price"><span class="p">$529.05</span><span class="c down">▼ 1.93%</span></div></div>
+      <span class="tag buy">偏多</span>
+      <ul class="why"><li>長期走勢向上</li><li>中長期走勢同步向上</li><li>離一年來最高點跌了 4%</li></ul>
+      <div class="line"><span><b>看錯的訊號：</b>收盤跌破 $505.37</span><span><b>分析師平均目標價：</b>$599.24（還有 13% 空間）</span></div>
+      <span class="alert">10/28（10 天後）公布財報，財報前後波動會變大</span>
+    </article>
+    <article class="stock">
+      <div class="top"><div class="name"><b>波克夏</b><small>BRK-B</small></div><div class="price"><span class="p">$532.02</span><span class="c up">▲ 1.21%</span></div></div>
+      <span class="tag buy">偏多</span>
+      <ul class="why"><li>長期走勢向上</li><li>中長期走勢同步向上</li><li>短線漲多了，可能先休息幾天</li></ul>
+      <div class="line"><span><b>看錯的訊號：</b>收盤跌破 $508.51</span><span><b>分析師平均目標價：</b>$547.67（還有 3% 空間）</span></div>
+      <span class="line" style="border:0;padding:0">下次財報 11/7（20 天後）</span>
+    </article>
+    <article class="stock">
+      <div class="top"><div class="name"><b>Meta</b><small>META</small></div><div class="price"><span class="p">$709.33</span><span class="c down">▼ 3.72%</span></div></div>
+      <span class="tag buy">偏多</span>
+      <ul class="why"><li>長期走勢向上</li><li>中長期走勢同步向上</li><li>離一年來最高點跌了 9%</li></ul>
+      <div class="line"><span><b>看錯的訊號：</b>收盤跌破 $654.96</span><span><b>分析師平均目標價：</b>$815.29（還有 15% 空間）</span></div>
+      <span class="alert">10/21（3 天後）公布財報，財報前後波動會變大</span>
+    </article>
+  </div>
+</section>
+<section class="group">
+  <div class="group-head"><h2 class="" style="color:var(--wait)">觀望</h2><span>4 檔｜方向不明，等明確再說</span></div>
+  <div class="cards">
+    <article class="stock">
+      <div class="top"><div class="name"><b>輝達</b><small>NVDA</small></div><div class="price"><span class="p">$214.13</span><span class="c down">▼ 1.43%</span></div></div>
+      <span class="tag hold">觀望</span>
+      <ul class="why"><li>長期走勢向上</li><li>近兩三個月轉弱，價格在中期平均價之下</li><li>離一年來最高點跌了 12%</li></ul>
+      <div class="line"><span><b>轉強訊號：</b>收盤站上 $222.96</span><span><b>轉弱訊號：</b>收盤跌破 $202.66</span><span><b>分析師平均目標價：</b>$328.72（還有 54% 空間）</span></div>
+      <span class="line" style="border:0;padding:0">下次財報 11/17（30 天後）</span>
+    </article>
+    <article class="stock">
+      <div class="top"><div class="name"><b>亞馬遜</b><small>AMZN</small></div><div class="price"><span class="p">$250.00</span><span class="c down">▼ 1.87%</span></div></div>
+      <span class="tag hold">觀望</span>
+      <ul class="why"><li>長期走勢向上</li><li>近兩三個月轉弱，價格在中期平均價之下</li><li>離一年來最高點跌了 13%</li></ul>
+      <div class="line"><span><b>轉強訊號：</b>收盤站上 $257.08</span><span><b>轉弱訊號：</b>收盤跌破 $242.73</span><span><b>分析師平均目標價：</b>$331.46（還有 33% 空間）</span></div>
+      <span class="alert">10/29（11 天後）公布財報，財報前後波動會變大</span>
+    </article>
+    <article class="stock">
+      <div class="top"><div class="name"><b>Google</b><small>GOOGL</small></div><div class="price"><span class="p">$340.59</span><span class="c down">▼ 2.47%</span></div></div>
+      <span class="tag hold">觀望</span>
+      <ul class="why"><li>長期走勢向上</li><li>近兩三個月轉弱，價格在中期平均價之下</li><li>離一年來最高點跌了 17%</li></ul>
+      <div class="line"><span><b>轉強訊號：</b>收盤站上 $344.49</span><span><b>轉弱訊號：</b>收盤跌破 $340.56</span><span><b>分析師平均目標價：</b>$430.51（還有 26% 空間）</span></div>
+      <span class="alert">10/28（10 天後）公布財報，財報前後波動會變大</span>
+    </article>
+    <article class="stock">
+      <div class="top"><div class="name"><b>台積電 ADR</b><small>TSM</small></div><div class="price"><span class="p">$412.61</span><span class="c down">▼ 2.28%</span></div></div>
+      <span class="tag hold">觀望</span>
+      <ul class="why"><li>長期走勢向上</li><li>近兩三個月轉弱，價格在中期平均價之下</li><li>離一年來最高點跌了 15%</li></ul>
+      <div class="line"><span><b>轉強訊號：</b>收盤站上 $433.75</span><span><b>轉弱訊號：</b>收盤跌破 $393.41</span><span><b>分析師平均目標價：</b>$584.39（還有 42% 空間）</span></div>
+      <span class="line" style="border:0;padding:0">下次財報 1/14（88 天後）</span>
+    </article>
+  </div>
+</section>
+<section class="group">
+  <div class="group-head"><h2 class="down">偏空</h2><span>2 檔｜走勢偏弱，暫時避開</span></div>
+  <div class="cards">
+    <article class="stock">
+      <div class="top"><div class="name"><b>博通</b><small>AVGO</small></div><div class="price"><span class="p">$328.75</span><span class="c down">▼ 4.52%</span></div></div>
+      <span class="tag avoid">偏空</span>
+      <ul class="why"><li>價格跌破長期平均價，長期趨勢向下</li><li>中期平均價落在長期平均價之下</li><li>離一年來最高點跌了 33%</li></ul>
+      <div class="line"><span><b>轉強訊號：</b>收盤站回 $365.32</span><span><b>分析師平均目標價：</b>$527.59（還有 60% 空間）</span></div>
+      <span class="line" style="border:0;padding:0">下次財報 12/9（52 天後）</span>
+    </article>
+    <article class="stock">
+      <div class="top"><div class="name"><b>特斯拉</b><small>TSLA</small></div><div class="price"><span class="p">$354.72</span><span class="c down">▼ 2.13%</span></div></div>
+      <span class="tag avoid">偏空｜10 檔中最弱</span>
+      <ul class="why"><li>價格跌破長期平均價，長期趨勢向下</li><li>中期平均價落在長期平均價之下</li><li>離一年來最高點跌了 29%</li></ul>
+      <div class="line"><span><b>轉強訊號：</b>收盤站回 $359.46</span><span><b>分析師平均目標價：</b>$397.83（還有 12% 空間）</span></div>
+      <span class="alert">10/21（3 天後）公布財報，財報前後波動會變大</span>
+    </article>
+  </div>
+</section>
+<section class="how">
+  <h2>怎麼看這份日報</h2>
+  <ul>
+    <li><b>偏多／觀望／偏空</b>是依股價走勢自動判斷，看的是長期、中期、短期趨勢，以及有沒有比大盤強。</li>
+    <li><b>看錯的訊號</b>是事先講好的價位：如果收盤跌破，就代表「偏多」的判斷錯了，該重新考慮。</li>
+    <li>顏色照台股習慣：<span class="up">紅色是漲</span>、<span class="down">綠色是跌</span>。</li>
+    <li>走勢判斷能幫你快速掌握現況，但回測顯示它<b>無法準確預測</b>接下來會漲還是跌。請當成參考，不要只看這個就下單。</li>
+  </ul>
+</section>
+<footer>本日報由程式自動產生，僅供參考，不構成投資建議。投資有風險，請自行判斷。</footer>
+</div>
+</body>
+</html>
