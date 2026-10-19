@@ -106,12 +106,21 @@ footer { font-size: 0.82rem; color: var(--ink-3); text-align: center; }
   .idx .p { font-size: 1rem; }
 }
 </style>
+<style>[hidden] { display: none !important; }</style>
 </head>
 <body>
 <div class="wrap">
 <header>
   <span class="date">2026 年 10 月 16 日（五）美股收盤｜台灣時間 10/17 早上更新</span>
   <h1>美股十大日報</h1>
+  <p class="alert" id="stale" data-bar="2026-10-16" hidden></p>
+  <script>
+  (function () {
+    var el = document.getElementById("stale"), bar = new Date(el.getAttribute("data-bar") + "T16:00:00-04:00");
+    var days = Math.floor((Date.now() - bar.getTime()) / 86400000);
+    if (days > 4) { el.textContent = "注意：資料已經 " + days + " 天沒有更新，內容可能過時。"; el.hidden = false; }
+  })();
+  </script>
   <p class="sub">每天幫你看美國市值最大的 10 家公司：今天發生什麼事、哪些走勢偏強、哪些先避開。</p>
 </header>
 <section class="market" aria-label="大盤"><div class="idx"><span class="n">S&amp;P 500（SPY）</span><span class="p">763.25</span><span class="c down">▼ 1.11%</span></div><div class="idx"><span class="n">那斯達克（QQQ）</span><span class="p">709.80</span><span class="c down">▼ 2.50%</span></div><div class="idx"><span class="n">恐慌指數（VIX）</span><span class="p">19.99</span><span class="c up">▲ 21.45%</span></div></section>
