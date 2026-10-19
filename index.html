@@ -7,113 +7,231 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=IBM+Plex+Mono:wght@500;600&display=swap">
-<style>
-/* 版面：手機優先的單欄日報。大盤一行 → 今日重點 → 依「偏多／觀望／偏空」分組的個股卡。台股習慣：紅漲綠跌 */
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@700;900&display=swap">
+<style>/* 美股十大日報：深藍報頭（像看盤看板）＋白色內容卡。台股習慣紅漲綠跌。 */
 :root {
-  --bg: #f4f6f8;
+  --bg: #f2f4f7;
   --card: #ffffff;
-  --ink: #1a1f26;
-  --ink-2: #505a66;
-  --ink-3: #87909b;
-  --line: #e1e5ea;
-  --up: #d63a3a;
-  --up-soft: #fdeceb;
-  --down: #1a8f5a;
-  --down-soft: #e3f4ea;
+  --ink: #121a26;
+  --ink-2: #4c5768;
+  --ink-3: #8a93a2;
+  --line: #e2e6ec;
+  --brand: #1b3158;
+  --gold: #c9a24a;
+  --up: #d6363b;
+  --up-soft: #fdecec;
+  --down: #12895a;
+  --down-soft: #e2f4ea;
   --wait: #6b7480;
-  --wait-soft: #eceff2;
-  --warn: #b76e00;
-  --warn-soft: #fdf1dc;
-  --brand: #20324d;
-  --font-head: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+  --wait-soft: #edf0f3;
+  --warn: #b56b00;
+  --warn-soft: #fdf2dd;
+  --shadow: 0 1px 2px rgba(18, 26, 38, .04), 0 4px 16px rgba(18, 26, 38, .06);
+  --hero-1: #0d1b33;
+  --hero-2: #17305a;
+  --hero-ink: #f4f7fb;
+  --hero-ink-2: #a9b8cf;
+  --hero-up: #ff7b7b;
+  --hero-down: #4fd99a;
+  --font-body: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+  --font-head: "Noto Serif TC", "Songti TC", "PMingLiU", serif;
   --font-num: "IBM Plex Mono", ui-monospace, Consolas, monospace;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #11151a; --card: #1a2027; --ink: #e8ecf0; --ink-2: #aeb7c1; --ink-3: #7c8691; --line: #2b333c;
-    --up: #ff6b6b; --up-soft: #3a1d1f; --down: #3ccf8a; --down-soft: #15301f; --wait: #9aa4ae; --wait-soft: #262d35;
-    --warn: #f0b24a; --warn-soft: #36290f; --brand: #a9c3ea; color-scheme: dark;
+    --bg: #0c1118; --card: #141b25; --ink: #e7ecf2; --ink-2: #a9b4c2; --ink-3: #748093; --line: #253041;
+    --brand: #9cc0f5; --gold: #d9b764; --up: #ff6a6a; --up-soft: #3a1c20; --down: #34cf8b; --down-soft: #11301f;
+    --wait: #9aa5b2; --wait-soft: #1f2732; --warn: #f2b34c; --warn-soft: #34280f;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 4px 16px rgba(0, 0, 0, .25);
+    --hero-1: #070e1b; --hero-2: #10213f; color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #11151a; --card: #1a2027; --ink: #e8ecf0; --ink-2: #aeb7c1; --ink-3: #7c8691; --line: #2b333c;
-  --up: #ff6b6b; --up-soft: #3a1d1f; --down: #3ccf8a; --down-soft: #15301f; --wait: #9aa4ae; --wait-soft: #262d35;
-  --warn: #f0b24a; --warn-soft: #36290f; --brand: #a9c3ea; color-scheme: dark;
+  --bg: #0c1118; --card: #141b25; --ink: #e7ecf2; --ink-2: #a9b4c2; --ink-3: #748093; --line: #253041;
+  --brand: #9cc0f5; --gold: #d9b764; --up: #ff6a6a; --up-soft: #3a1c20; --down: #34cf8b; --down-soft: #11301f;
+  --wait: #9aa5b2; --wait-soft: #1f2732; --warn: #f2b34c; --warn-soft: #34280f;
+  --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 4px 16px rgba(0, 0, 0, .25);
+  --hero-1: #070e1b; --hero-2: #10213f; color-scheme: dark;
 }
+
 * { box-sizing: border-box; }
-body {
-  background: var(--bg); color: var(--ink); font-family: var(--font-head); font-size: 16px; line-height: 1.7;
-  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+[hidden] { display: none !important; }
+html { scroll-behavior: smooth; scroll-padding-top: 64px; }
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 16px; line-height: 1.7; }
+h1, h2, h3 { margin: 0; line-height: 1.3; text-wrap: balance; }
+p { margin: 0; }
+a { color: var(--brand); }
+.up { color: var(--up); }
+.down { color: var(--down); }
+.num { font-family: var(--font-num); font-variant-numeric: tabular-nums; }
+
+/* ---------- 報頭 ---------- */
+.hero {
+  color: var(--hero-ink);
+  background:
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, .035) 0 1px, transparent 1px 72px),
+    linear-gradient(160deg, var(--hero-1), var(--hero-2));
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 36px 28px;
+}
+.hero-in { max-width: 1080px; margin: 0 auto; display: grid; gap: 22px; }
+.hero .date { font-size: .85rem; letter-spacing: .06em; color: var(--gold); }
+.hero h1 { font-family: var(--font-head); font-weight: 900; font-size: clamp(2.1rem, 6vw, 3.2rem); letter-spacing: .04em; margin-top: 4px; }
+.hero .sub { color: var(--hero-ink-2); margin-top: 6px; max-width: 36em; }
+.market { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.idx {
+  background: rgba(255, 255, 255, .06); border: 1px solid rgba(255, 255, 255, .1); border-radius: 14px;
+  padding: 14px 16px; display: grid; gap: 2px; min-width: 0;
+}
+.idx .n { font-size: .8rem; color: var(--hero-ink-2); }
+.idx .p { font-family: var(--font-num); font-size: 1.6rem; font-weight: 600; font-variant-numeric: tabular-nums; }
+.idx .c { font-family: var(--font-num); font-size: .9rem; }
+.hero .up { color: var(--hero-up); }
+.hero .down { color: var(--hero-down); }
+.mood { color: var(--hero-ink-2); font-size: .95rem; border-left: 3px solid var(--gold); padding-left: 12px; }
+.mood b { color: var(--hero-ink); }
+.stale { background: var(--warn-soft); color: var(--warn); border-radius: 10px; padding: 8px 12px; font-weight: 500; }
+
+/* ---------- 導覽列 ---------- */
+.nav {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 10;
+  background: color-mix(in srgb, var(--card) 88%, transparent); backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line);
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.nav-in { max-width: 1080px; margin: 0 auto; display: flex; gap: 4px; overflow-x: auto; scrollbar-width: none; padding-block: 8px; }
+.nav a {
+  flex: none; text-decoration: none; color: var(--ink-2); font-size: .9rem; font-weight: 500;
+  padding: 6px 14px; border-radius: 999px;
+}
+.nav a:hover { background: var(--wait-soft); color: var(--ink); }
+
+/* ---------- 版面 ---------- */
+.wrap {
+  max-width: 1080px; margin: 0 auto; display: grid; gap: 32px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
   padding-block: 28px 56px;
 }
-.wrap { max-width: 760px; margin: 0 auto; display: grid; gap: 28px; }
-h1, h2, h3 { margin: 0; text-wrap: balance; line-height: 1.3; }
-p { margin: 0; }
-.num { font-family: var(--font-num); font-variant-numeric: tabular-nums; }
-.up { color: var(--up); } .down { color: var(--down); }
+.stack { display: grid; gap: 32px; }
+.split { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 24rem), 1fr)); gap: 20px; align-items: start; }
+.panel, .mine {
+  background: var(--card); border: 1px solid var(--line); border-radius: 16px; box-shadow: var(--shadow);
+  padding: 22px; display: grid; gap: 14px; min-width: 0;
+}
+.panel h2, .mine h2 { font-family: var(--font-head); font-size: 1.3rem; font-weight: 700; }
+.panel > p { color: var(--ink-2); }
+.advice { border-top: 4px solid var(--up); }
+.points { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+.points li { display: grid; grid-template-columns: 2.1rem minmax(0, 1fr); gap: 12px; align-items: start; }
+.dot { width: 2.1rem; height: 2.1rem; border-radius: 50%; display: grid; place-items: center; font-weight: 700; font-size: .85rem; }
+.dot.up { background: var(--up-soft); }
+.dot.down { background: var(--down-soft); }
+.dot.warn { background: var(--warn-soft); color: var(--warn); }
 
-header { display: grid; gap: 6px; }
-.date { font-size: 0.9rem; color: var(--ink-3); }
-h1 { font-size: clamp(1.8rem, 6vw, 2.4rem); font-weight: 900; color: var(--brand); }
-.sub { color: var(--ink-2); }
-
-.market { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
-.idx { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; display: grid; gap: 2px; min-width: 0; }
-.idx .n { font-size: 0.8rem; color: var(--ink-3); }
-.idx .p { font-family: var(--font-num); font-size: 1.15rem; font-weight: 600; }
-.idx .c { font-family: var(--font-num); font-size: 0.85rem; }
-.mood { font-size: 0.95rem; color: var(--ink-2); }
-.mood b { color: var(--ink); }
-
-.today { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 20px; display: grid; gap: 12px; }
-.today h2 { font-size: 1.15rem; }
-.today ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; }
-.today li { display: grid; grid-template-columns: 2.2rem minmax(0, 1fr); gap: 10px; align-items: start; }
-.dot { width: 2.2rem; height: 2.2rem; border-radius: 50%; display: grid; place-items: center; font-weight: 700; font-size: 0.85rem; }
-.dot.up { background: var(--up-soft); } .dot.down { background: var(--down-soft); } .dot.warn { background: var(--warn-soft); color: var(--warn); }
-
-.group { display: grid; gap: 12px; }
-.group-head { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
-.group-head h2 { font-size: 1.3rem; }
-.group-head span { color: var(--ink-3); font-size: 0.9rem; }
-.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 20rem), 1fr)); gap: 12px; }
-
-.stock { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 18px; display: grid; gap: 12px; align-content: start; min-width: 0; }
+/* ---------- 分組與卡片 ---------- */
+.group { display: grid; gap: 14px; }
+.group-head { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.group-head h2 { font-family: var(--font-head); font-size: 1.45rem; font-weight: 900; }
+.group-head span { color: var(--ink-3); font-size: .9rem; }
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 20rem), 1fr)); gap: 16px; }
+.stock {
+  position: relative; background: var(--card); border: 1px solid var(--line); border-radius: 16px; box-shadow: var(--shadow);
+  padding: 18px 18px 16px 22px; display: grid; gap: 12px; align-content: start; min-width: 0; overflow: hidden;
+}
+.stock::before { content: ""; position: absolute; inset: 0 auto 0 0; width: 5px; background: var(--line); }
+.stock.act-buy::before { background: var(--up); }
+.stock.act-sell::before { background: var(--down); }
+.stock.act-hold::before { background: color-mix(in srgb, var(--up) 45%, var(--line)); }
 .top { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
 .name b { font-size: 1.25rem; font-weight: 900; display: block; line-height: 1.2; }
-.name small { color: var(--ink-3); font-size: 0.85rem; }
+.name small { color: var(--ink-3); font-family: var(--font-num); font-size: .8rem; letter-spacing: .04em; }
 .price { text-align: right; }
-.price .p { font-family: var(--font-num); font-size: 1.2rem; font-weight: 600; display: block; }
-.price .c { font-family: var(--font-num); font-size: 0.9rem; }
-.tag { display: inline-block; font-weight: 700; font-size: 0.9rem; padding: 3px 12px; border-radius: 999px; width: fit-content; }
+.price .p { font-family: var(--font-num); font-size: 1.3rem; font-weight: 600; display: block; font-variant-numeric: tabular-nums; }
+.price .c { font-family: var(--font-num); font-size: .9rem; }
+.tag { display: inline-block; font-weight: 700; font-size: .85rem; padding: 3px 12px; border-radius: 999px; width: fit-content; }
 .tag.buy { background: var(--up-soft); color: var(--up); }
-.tag.hold { background: var(--wait-soft); color: var(--wait); }
 .tag.avoid { background: var(--down-soft); color: var(--down); }
-.why { margin: 0; padding-left: 1.1em; display: grid; gap: 4px; font-size: 0.95rem; }
-.why li::marker { color: var(--ink-3); }
-.line { font-size: 0.9rem; color: var(--ink-2); border-top: 1px dashed var(--line); padding-top: 10px; display: grid; gap: 4px; }
+.tag.hold { background: var(--wait-soft); color: var(--wait); }
+.stock.act-buy .tag { background: var(--up); color: #fff; }
+.stock.act-sell .tag { background: var(--down); color: #fff; }
+.why { margin: 0; padding: 0; list-style: none; display: grid; gap: 4px; font-size: .95rem; }
+.why li { padding-left: 1.1em; position: relative; }
+.why li::before { content: "›"; position: absolute; left: 0; color: var(--ink-3); font-weight: 700; }
+.line { font-size: .88rem; color: var(--ink-2); background: var(--bg); border-radius: 10px; padding: 10px 12px; display: grid; gap: 4px; }
+.line:empty { display: none; }
 .line b { color: var(--ink); font-weight: 500; }
-.alert { font-size: 0.88rem; background: var(--warn-soft); color: var(--warn); border-radius: 8px; padding: 6px 10px; }
+.alert { font-size: .85rem; background: var(--warn-soft); color: var(--warn); border-radius: 8px; padding: 6px 10px; }
+.news { font-size: .88rem; border-top: 1px dashed var(--line); padding-top: 8px; }
+.news summary { cursor: pointer; color: var(--brand); font-weight: 500; }
+.news ul { margin: 8px 0 0; padding-left: 1.1em; display: grid; gap: 8px; }
+.news a { color: var(--ink); text-decoration: none; }
+.news a:hover { text-decoration: underline; }
+.news small { display: block; color: var(--ink-3); font-size: .78rem; }
 
-.how { font-size: 0.9rem; color: var(--ink-2); background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 18px 20px; display: grid; gap: 8px; }
-.how h2 { font-size: 1.05rem; color: var(--ink); }
-.how ul { margin: 0; padding-left: 1.1em; display: grid; gap: 4px; }
-footer { font-size: 0.82rem; color: var(--ink-3); text-align: center; }
+/* ---------- 我的清單 ---------- */
+.mine { border: 2px solid var(--brand); }
+.row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.row label { color: var(--ink-2); font-size: .9rem; }
+.row input, .row select {
+  font: inherit; padding: 8px 12px; border: 1px solid var(--line); border-radius: 10px;
+  background: var(--bg); color: var(--ink); min-width: 0;
+}
+.row input[type=number] { width: 8rem; }
+#mTicker { width: 12rem; }
+.btn { font: inherit; font-weight: 500; padding: 8px 18px; border-radius: 10px; border: 1px solid var(--brand); background: var(--brand); color: var(--card); cursor: pointer; }
+.btn.ghost { background: transparent; color: var(--brand); }
+.btn.small { padding: 3px 12px; font-size: .85rem; }
+.btn:hover { filter: brightness(1.08); }
+.msg { font-size: .9rem; color: var(--ink-2); }
+.tbl-wrap { overflow-x: auto; }
+.hold-tbl { width: 100%; border-collapse: collapse; font-size: .9rem; }
+.hold-tbl th, .hold-tbl td { padding: 10px 8px; border-bottom: 1px solid var(--line); text-align: right; white-space: nowrap; }
+.hold-tbl th:first-child, .hold-tbl td:first-child { text-align: left; }
+.hold-tbl th { color: var(--ink-3); font-weight: 500; font-size: .78rem; letter-spacing: .04em; }
+.hold-tbl td { font-family: var(--font-num); font-variant-numeric: tabular-nums; }
+.hold-tbl td small { display: block; color: var(--ink-3); font-size: .72rem; }
+.hold-tbl tbody tr:hover { background: var(--bg); }
+.mine .rm { position: absolute; top: 12px; right: 12px; }
+.mine .stock .top { padding-right: 3.6rem; }
 
-@media (max-width: 480px) {
-  .market { grid-template-columns: 1fr 1fr 1fr; gap: 6px; }
-  .idx { padding: 10px; }
-  .idx .p { font-size: 1rem; }
+/* ---------- 說明與頁尾 ---------- */
+.how ul { margin: 0; padding-left: 1.2em; display: grid; gap: 8px; color: var(--ink-2); }
+.how b { color: var(--ink); }
+footer { text-align: center; font-size: .82rem; color: var(--ink-3); line-height: 1.8; }
+
+a:focus-visible, .btn:focus-visible, .row input:focus-visible, .row select:focus-visible, summary:focus-visible {
+  outline: 2px solid var(--brand); outline-offset: 2px;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .stock { transition: transform .15s ease, box-shadow .15s ease; }
+  .stock:hover { transform: translateY(-2px); }
+}
+@media (max-width: 560px) {
+  .hero { padding-block: 26px 22px; }
+  .market { gap: 8px; }
+  .idx { padding: 10px; border-radius: 12px; }
+  .idx .p { font-size: 1.1rem; }
+  .panel, .mine { padding: 18px; }
+  .wrap { gap: 24px; }
 }
 </style>
-<style>[hidden] { display: none !important; }</style>
 </head>
 <body>
-<div class="wrap">
-<header>
-  <span class="date">2026 年 10 月 16 日（五）美股收盤｜台灣時間 10/17 早上更新</span>
-  <h1>美股十大日報</h1>
-  <p class="alert" id="stale" data-bar="2026-10-16" hidden></p>
+<header class="hero">
+ <div class="hero-in">
+  <div class="masthead">
+    <div>
+      <span class="date">2026 年 10 月 16 日（五）美股收盤｜台灣時間 10/17 早上更新</span>
+      <h1>美股十大日報</h1>
+      <p class="sub">每天幫你看美國市值最大的 10 家公司：今天發生什麼事、哪些走勢偏強、哪些先避開。</p>
+    </div>
+  </div>
+  <section class="market" aria-label="大盤"><div class="idx"><span class="n">S&amp;P 500（SPY）</span><span class="p">763.25</span><span class="c down">▼ 1.11%</span></div><div class="idx"><span class="n">那斯達克（QQQ）</span><span class="p">709.80</span><span class="c down">▼ 2.50%</span></div><div class="idx"><span class="n">恐慌指數（VIX）</span><span class="p">19.99</span><span class="c up">▲ 21.45%</span></div></section>
+  <p class="mood"><b>大盤氣氛：平穩偏多。</b>S&amp;P 500 在長期趨勢線之上，恐慌指數偏低。</p>
+  <p class="stale" id="stale" data-bar="2026-10-16" hidden></p>
   <script>
   (function () {
     var el = document.getElementById("stale"), bar = new Date(el.getAttribute("data-bar") + "T16:00:00-04:00");
@@ -121,40 +239,14 @@ footer { font-size: 0.82rem; color: var(--ink-3); text-align: center; }
     if (days > 4) { el.textContent = "注意：資料已經 " + days + " 天沒有更新，內容可能過時。"; el.hidden = false; }
   })();
   </script>
-  <p class="sub">每天幫你看美國市值最大的 10 家公司：今天發生什麼事、哪些走勢偏強、哪些先避開。</p>
+ </div>
 </header>
-<section class="market" aria-label="大盤"><div class="idx"><span class="n">S&amp;P 500（SPY）</span><span class="p">763.25</span><span class="c down">▼ 1.11%</span></div><div class="idx"><span class="n">那斯達克（QQQ）</span><span class="p">709.80</span><span class="c down">▼ 2.50%</span></div><div class="idx"><span class="n">恐慌指數（VIX）</span><span class="p">19.99</span><span class="c up">▲ 21.45%</span></div></section>
-<p class="mood"><b>大盤氣氛：平穩偏多。</b>S&amp;P 500 在長期趨勢線之上，恐慌指數偏低。</p>
+<nav class="nav" aria-label="頁面導覽"><div class="nav-in">
+  <a href="#mine">我的清單</a><a href="#advice">買賣建議</a><a href="#today">今天重點</a><a href="#top10">十大股票</a><a href="#score">成績單</a><a href="#how">怎麼看</a>
+</div></nav>
+<main class="wrap">
 
-<style>
-[hidden] { display: none !important; }
-.news { font-size: 0.88rem; }
-.news summary { cursor: pointer; color: var(--brand); }
-.news ul { margin: 6px 0 0; padding-left: 1.1em; display: grid; gap: 6px; }
-.news a { color: var(--ink); }
-.news small { display: block; color: var(--ink-3); font-size: 0.78rem; }
-.mine { background: var(--card); border: 2px solid var(--brand); border-radius: 14px; padding: 20px; display: grid; gap: 14px; }
-.mine h2 { font-size: 1.2rem; }
-.row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
-.row input, .row select { font: inherit; padding: 6px 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); color: var(--ink); min-width: 0; }
-.row input[type=number] { width: 7.5rem; }
-#mTicker { width: 11rem; }
-.btn { font: inherit; padding: 6px 14px; border-radius: 8px; border: 1px solid var(--brand); background: var(--brand); color: var(--card); cursor: pointer; }
-.btn.ghost { background: transparent; color: var(--brand); }
-.btn.small { padding: 2px 10px; font-size: 0.85rem; }
-.btn:focus-visible, .row input:focus-visible, .row select:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
-.msg { font-size: 0.9rem; color: var(--ink-2); }
-.hold-tbl { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
-.hold-tbl th, .hold-tbl td { padding: 8px 6px; border-bottom: 1px solid var(--line); text-align: right; white-space: nowrap; }
-.hold-tbl th:first-child, .hold-tbl td:first-child { text-align: left; }
-.hold-tbl th { color: var(--ink-3); font-weight: 500; font-size: 0.8rem; }
-.hold-tbl td { font-family: var(--font-num); font-variant-numeric: tabular-nums; }
-.tbl-wrap { overflow-x: auto; }
-.mine .stock { position: relative; }
-.mine .stock .rm { position: absolute; top: 10px; right: 10px; }
-.mine .stock .top { padding-right: 3.5rem; }
-</style>
-<section class="mine" aria-labelledby="h-mine">
+<section class="mine" id="mine" aria-labelledby="h-mine">
   <div class="group-head"><h2 id="h-mine">我的清單</h2><span>資料只存在這台裝置的瀏覽器，不會上傳</span></div>
   <div class="row">
     <label for="mUser">使用者</label>
@@ -210,7 +302,7 @@ footer { font-size: 0.82rem; color: var(--ink-3); text-align: center; }
     items.forEach(function (it, i) {
       var d = data.stocks[it.t]; if (!d) return;
       if (d.action === "buy" || d.action === "sell") trades.push(d.name + "（" + it.t + "）" + (d.action === "buy" ? "可考慮買進" : "可考慮賣出／減碼"));
-      html += d.card.replace('<article class="stock">', '<article class="stock"><button class="btn ghost small rm" type="button" data-i="' + i + '">移除</button>');
+      html += d.card.replace(/(<article class="stock[^"]*">)/, '$1<button class="btn ghost small rm" type="button" data-i="' + i + '">移除</button>');
       if (it.sh > 0) {
         var v = it.sh * d.close, line = '<td>' + esc(d.name) + ' ' + it.t + '</td><td>' + it.sh + '</td><td>' + money(d.close) + '</td><td>' + money(v) + '</td>';
         tv += v;
@@ -276,34 +368,36 @@ footer { font-size: 0.82rem; color: var(--ink-3); text-align: center; }
 })();
 </script>
 
-<section class="today"><h2>十大股票今日買賣建議</h2><ul><li><span class="dot warn">—</span><p><b>今天沒有買賣建議。</b>只有在財報公布後、市場反應和股價走勢同方向時才會出現，大部分日子是持有或觀望。</p></li></ul></section>
-<section class="today"><h2>今天的重點</h2><ul><li><span class="dot down">▼</span><p><b>台積電 ADR（TSM）財報反應：弱。</b>市場反應很差，接下來約一個月偏向延續走弱（這是回測裡唯一有效的訊號，但只是勝算稍高，不是穩賺）。</p></li><li><span class="dot down">▼</span><p><b>Google（GOOGL）</b>股價跌破中期平均價。</p></li><li><span class="dot down">▼</span><p><b>Google（GOOGL）</b>短期動能轉弱。</p></li><li><span class="dot down">▼</span><p><b>特斯拉（TSLA）</b>股價跌破中期平均價。</p></li><li><span class="dot warn">!</span><p><b>Meta（META）2 天後公布財報。</b>財報公布後第一天的漲跌方向，是回測裡最有參考價值的訊號。</p></li><li><span class="dot warn">!</span><p><b>特斯拉（TSLA）2 天後公布財報。</b>財報公布後第一天的漲跌方向，是回測裡最有參考價值的訊號。</p></li></ul></section>
-
+<div class="split">
+<section class="panel advice" id="advice"><h2>十大股票今日買賣建議</h2><ul class="points"><li><span class="dot warn">—</span><p><b>今天沒有買賣建議。</b>只有在財報公布後、市場反應和股價走勢同方向時才會出現，大部分日子是持有或觀望。</p></li></ul></section>
+<section class="panel" id="today"><h2>今天的重點</h2><ul class="points"><li><span class="dot down">▼</span><p><b>台積電 ADR（TSM）財報反應：弱。</b>市場反應很差，接下來約一個月偏向延續走弱（這是回測裡唯一有效的訊號，但只是勝算稍高，不是穩賺）。</p></li><li><span class="dot down">▼</span><p><b>Google（GOOGL）</b>股價跌破中期平均價。</p></li><li><span class="dot down">▼</span><p><b>Google（GOOGL）</b>短期動能轉弱。</p></li><li><span class="dot down">▼</span><p><b>特斯拉（TSLA）</b>股價跌破中期平均價。</p></li><li><span class="dot warn">!</span><p><b>Meta（META）2 天後公布財報。</b>財報公布後第一天的漲跌方向，是回測裡最有參考價值的訊號。</p></li><li><span class="dot warn">!</span><p><b>特斯拉（TSLA）2 天後公布財報。</b>財報公布後第一天的漲跌方向，是回測裡最有參考價值的訊號。</p></li></ul></section>
+</div>
+<div id="top10" class="stack">
 <section class="group">
   <div class="group-head"><h2 class="up">持有</h2><span>4 檔｜走勢偏強，已持有可續抱，但沒有新的買進訊號</span></div>
   <div class="cards">
-    <article class="stock">
+    <article class="stock act-hold">
       <div class="top"><div class="name"><b>蘋果</b><small>AAPL</small></div><div class="price"><span class="p">$343.46</span><span class="c up">▲ 0.43%</span></div></div>
       <span class="tag hold">持有｜走勢偏強｜10 檔中最強</span>
       <ul class="why"><li>長期走勢向上</li><li>中長期走勢同步向上</li><li>離一年來最高點只差 1.3%</li></ul>
       <div class="line"><span><b>看錯的訊號：</b>收盤跌破 $325.69</span><span><b>分析師平均目標價：</b>$329.38（已經超過目標價 4%）</span></div>
       <span class="alert">11/2（14 天後）公布財報，財報前後波動會變大</span><details class="news"><summary>最新新聞（英文，3 則）</summary><ul><li><a href="https://finnhub.io/api/news?id=833bc80d9748fdde323eb686e9f8065372b20c6efd59e1202148bb04a26a5e57" target="_blank" rel="noopener">Trump’s $330 Million White House Ballroom Donor List Reveals Nvidia, Apple and Google Among Top Tech Contributors: Report (UPDATED)</a><small>Yahoo｜10/19</small></li><li><a href="https://finnhub.io/api/news?id=e0db64bd2e9fe68b45156e9dbb2034df9a1d0fc7ee0119050ab3277262f8e3da" target="_blank" rel="noopener">Starboard sees big upside in Skyworks after Qorvo merger, Bloomberg reports</a><small>Yahoo｜10/19</small></li><li><a href="https://finnhub.io/api/news?id=033f4af5f4f91b753316232bf70e79ea449c1cd8db506f803ae8705ec9c6f0fa" target="_blank" rel="noopener">AAPL, TSLA, NFLX, GME, RKLB: Why Retail Traders Couldn’t Take Their Eyes Off These Stocks Last Week</a><small>Yahoo｜10/19</small></li></ul></details>
     </article>
-    <article class="stock">
+    <article class="stock act-hold">
       <div class="top"><div class="name"><b>微軟</b><small>MSFT</small></div><div class="price"><span class="p">$529.05</span><span class="c down">▼ 1.93%</span></div></div>
       <span class="tag hold">持有｜走勢偏強</span>
       <ul class="why"><li>長期走勢向上</li><li>中長期走勢同步向上</li><li>離一年來最高點跌了 4%</li></ul>
       <div class="line"><span><b>看錯的訊號：</b>收盤跌破 $505.37</span><span><b>分析師平均目標價：</b>$599.24（還有 13% 空間）</span></div>
       <span class="alert">10/28（9 天後）公布財報，財報前後波動會變大</span><details class="news"><summary>最新新聞（英文，3 則）</summary><ul><li><a href="https://finnhub.io/api/news?id=833bc80d9748fdde323eb686e9f8065372b20c6efd59e1202148bb04a26a5e57" target="_blank" rel="noopener">Trump’s $330 Million White House Ballroom Donor List Reveals Nvidia, Apple and Google Among Top Tech Contributors: Report (UPDATED)</a><small>Yahoo｜10/19</small></li><li><a href="https://finnhub.io/api/news?id=f81e56ca69a5fcfaacd77d3a9630d96359897268651205c32cb90015cce769d2" target="_blank" rel="noopener">What Would Stop The AI Selloff</a><small>SeekingAlpha｜10/19</small></li><li><a href="https://finnhub.io/api/news?id=ff35a4a3386611f185444efefec578170d0e502541a8bd27f6b93751b1fc61b7" target="_blank" rel="noopener">Some Investors Are Questioning the AI Trade. Microsoft Is Bucking the Trend</a><small>Yahoo｜10/18</small></li></ul></details>
     </article>
-    <article class="stock">
+    <article class="stock act-hold">
       <div class="top"><div class="name"><b>波克夏</b><small>BRK-B</small></div><div class="price"><span class="p">$532.02</span><span class="c up">▲ 1.21%</span></div></div>
       <span class="tag hold">持有｜走勢偏強</span>
       <ul class="why"><li>長期走勢向上</li><li>中長期走勢同步向上</li><li>短線漲多了，可能先休息幾天</li></ul>
       <div class="line"><span><b>看錯的訊號：</b>收盤跌破 $508.51</span><span><b>分析師平均目標價：</b>$547.67（還有 3% 空間）</span></div>
       <span class="line" style="border:0;padding:0">下次財報 11/7（19 天後）</span><details class="news"><summary>最新新聞（英文，3 則）</summary><ul><li><a href="https://finnhub.io/api/news?id=343a8280b97ee2beb305a37aaf5d5e4c490fd1015eb7a8ba8b6f108526c1474a" target="_blank" rel="noopener">Berkshire Hathaway (BRK.B) After Buffett: Can Its Capital Allocation Machine Keep Compounding?</a><small>Yahoo｜10/18</small></li><li><a href="https://finnhub.io/api/news?id=7f1abb7015adde4644b22f6b067bde1de6427ea1b0ed36727396aeade07a15a4" target="_blank" rel="noopener">Berkshire Hathaway CEO Greg Abel Leads Huge Investment In Bending Spoons</a><small>Yahoo｜10/18</small></li><li><a href="https://finnhub.io/api/news?id=20b3248aa26392d4663278bc6d5be6fa65d0e4e80fee8891e032764d2f58a8ec" target="_blank" rel="noopener">Warren Buffett Says He Has "Never Felt Better" About Berkshire Hathaway's Future as He Steps Down as Chairman at 96</a><small>Yahoo｜10/18</small></li></ul></details>
     </article>
-    <article class="stock">
+    <article class="stock act-hold">
       <div class="top"><div class="name"><b>Meta</b><small>META</small></div><div class="price"><span class="p">$709.33</span><span class="c down">▼ 3.72%</span></div></div>
       <span class="tag hold">持有｜走勢偏強</span>
       <ul class="why"><li>長期走勢向上</li><li>中長期走勢同步向上</li><li>離一年來最高點跌了 9%</li></ul>
@@ -315,42 +409,42 @@ footer { font-size: 0.82rem; color: var(--ink-3); text-align: center; }
 <section class="group">
   <div class="group-head"><h2 class="" style="color:var(--wait)">觀望</h2><span>6 檔｜走勢不明或偏弱，先不動作</span></div>
   <div class="cards">
-    <article class="stock">
+    <article class="stock act-wait">
       <div class="top"><div class="name"><b>輝達</b><small>NVDA</small></div><div class="price"><span class="p">$214.13</span><span class="c down">▼ 1.43%</span></div></div>
       <span class="tag hold">觀望｜方向不明</span>
       <ul class="why"><li>長期走勢向上</li><li>近兩三個月轉弱，價格在中期平均價之下</li><li>離一年來最高點跌了 12%</li></ul>
       <div class="line"><span><b>轉強訊號：</b>收盤站上 $222.96</span><span><b>轉弱訊號：</b>收盤跌破 $202.66</span><span><b>分析師平均目標價：</b>$328.72（還有 54% 空間）</span></div>
       <span class="line" style="border:0;padding:0">下次財報 11/17（29 天後）</span><details class="news"><summary>最新新聞（英文，3 則）</summary><ul><li><a href="https://finnhub.io/api/news?id=4d9a938a09a81f7e6ee1a99cc4d0b52c833ca0e75c0927569809bc92ed67f522" target="_blank" rel="noopener">If I Could Only Own 1 Artificial Intelligence (AI) Stock Through the Next Bubble Scare, It Would Be This One</a><small>Yahoo｜10/19</small></li><li><a href="https://finnhub.io/api/news?id=0ca87ffce4abd4a8acf50ba996a0d0f2c2f502afd4bdc216d4e0983659994c47" target="_blank" rel="noopener">Warren Buffett Warned About Stock Valuations. So Why Is Berkshire Still Buying Stocks?</a><small>Yahoo｜10/19</small></li><li><a href="https://finnhub.io/api/news?id=ad6b7bc20bcba49aeeb9e51f1b075ed96da868764e5bf187c7ffe2a75a58b7e1" target="_blank" rel="noopener">What Does BlackRock (BLK) Joining A $500 Billion AI Funding Push Mean?</a><small>Yahoo｜10/19</small></li></ul></details>
     </article>
-    <article class="stock">
+    <article class="stock act-wait">
       <div class="top"><div class="name"><b>亞馬遜</b><small>AMZN</small></div><div class="price"><span class="p">$250.00</span><span class="c down">▼ 1.87%</span></div></div>
       <span class="tag hold">觀望｜方向不明</span>
       <ul class="why"><li>長期走勢向上</li><li>近兩三個月轉弱，價格在中期平均價之下</li><li>離一年來最高點跌了 13%</li></ul>
       <div class="line"><span><b>轉強訊號：</b>收盤站上 $257.08</span><span><b>轉弱訊號：</b>收盤跌破 $242.73</span><span><b>分析師平均目標價：</b>$331.46（還有 33% 空間）</span></div>
       <span class="alert">10/29（10 天後）公布財報，財報前後波動會變大</span><details class="news"><summary>最新新聞（英文，3 則）</summary><ul><li><a href="https://finnhub.io/api/news?id=8b69def7e68853c334725234bf7dd16b9393022b4dee0bbda9f2dbd52e29a622" target="_blank" rel="noopener">Prediction: Amazon Stock Will Soar After Oct. 29</a><small>Yahoo｜10/19</small></li><li><a href="https://finnhub.io/api/news?id=8b19d1717a0d909f6363222d686863c3f4fb2b1cff6f51dc036eeabdb9f7537c" target="_blank" rel="noopener">Amazon.com vs. Walmart: Which Stock Is a Better Buy in 2026?</a><small>Yahoo｜10/19</small></li><li><a href="https://finnhub.io/api/news?id=c17003935bf1124cabd573194be1f91c91ed2b180d26b06a704951188042e8b6" target="_blank" rel="noopener">CoreWeave, Oracle have an interest rate problem</a><small>Yahoo｜10/19</small></li></ul></details>
     </article>
-    <article class="stock">
+    <article class="stock act-wait">
       <div class="top"><div class="name"><b>Google</b><small>GOOGL</small></div><div class="price"><span class="p">$340.59</span><span class="c down">▼ 2.47%</span></div></div>
       <span class="tag hold">觀望｜方向不明</span>
       <ul class="why"><li>長期走勢向上</li><li>近兩三個月轉弱，價格在中期平均價之下</li><li>離一年來最高點跌了 17%</li></ul>
       <div class="line"><span><b>轉強訊號：</b>收盤站上 $344.49</span><span><b>轉弱訊號：</b>收盤跌破 $340.56</span><span><b>分析師平均目標價：</b>$430.51（還有 26% 空間）</span></div>
       <span class="alert">10/28（9 天後）公布財報，財報前後波動會變大</span><details class="news"><summary>最新新聞（英文，3 則）</summary><ul><li><a href="https://finnhub.io/api/news?id=833bc80d9748fdde323eb686e9f8065372b20c6efd59e1202148bb04a26a5e57" target="_blank" rel="noopener">Trump’s $330 Million White House Ballroom Donor List Reveals Nvidia, Apple and Google Among Top Tech Contributors: Report (UPDATED)</a><small>Yahoo｜10/19</small></li><li><a href="https://finnhub.io/api/news?id=c17003935bf1124cabd573194be1f91c91ed2b180d26b06a704951188042e8b6" target="_blank" rel="noopener">CoreWeave, Oracle have an interest rate problem</a><small>Yahoo｜10/19</small></li><li><a href="https://finnhub.io/api/news?id=f3c21b9b15ab6d2c2155514d5e7ca74b19ec648f08be4dc979726c2bf9a4b8bb" target="_blank" rel="noopener">OpenAI, Anthropic’s AI Lead Is ‘Very Perishable,’ IMD Professor Says: ‘You Don’t Need to Drive a Ferrari to Go to Walmart’</a><small>Yahoo｜10/19</small></li></ul></details>
     </article>
-    <article class="stock">
+    <article class="stock act-wait">
       <div class="top"><div class="name"><b>台積電 ADR</b><small>TSM</small></div><div class="price"><span class="p">$412.61</span><span class="c down">▼ 2.28%</span></div></div>
       <span class="tag hold">觀望｜方向不明</span>
       <ul class="why"><li>長期走勢向上</li><li>近兩三個月轉弱，價格在中期平均價之下</li><li>離一年來最高點跌了 15%</li></ul>
       <div class="line"><span><b>財報反應：</b><span class="down"><b>弱</b></span>（財報後第一天比大盤多跌 2.1%，還有 19 個交易日參考價值較高）</span><span><b>轉強訊號：</b>收盤站上 $433.75</span><span><b>轉弱訊號：</b>收盤跌破 $393.41</span><span><b>分析師平均目標價：</b>$584.39（還有 42% 空間）</span></div>
       <span class="line" style="border:0;padding:0">下次財報 1/14（87 天後）</span><details class="news"><summary>最新新聞（英文，3 則）</summary><ul><li><a href="https://finnhub.io/api/news?id=aa8f89ccfcc82cdd5533240900c42271d1d202512420920155fb3590ecca9420" target="_blank" rel="noopener">Taiwan Semiconductor Just Proved Why It's a Top AI Investment</a><small>Yahoo｜10/18</small></li><li><a href="https://finnhub.io/api/news?id=240e186e2081627e21cb96a5b0f775f27bb1ae52bd574984a0faeac97b1e1391" target="_blank" rel="noopener">Elon Musk Admits He Has ‘No Idea’ How to Make Chips. Tesla Investors May Help Pay for Him to Learn.</a><small>Yahoo｜10/18</small></li><li><a href="https://finnhub.io/api/news?id=99ada1d69d367f1bd75eb62c3b665b465fed7b42122097d0c519a376c3167313" target="_blank" rel="noopener">What Does Broadcom (AVGO) Face As AI Chip Supply Turns Into A Bottleneck?</a><small>Yahoo｜10/18</small></li></ul></details>
     </article>
-    <article class="stock">
+    <article class="stock act-wait">
       <div class="top"><div class="name"><b>博通</b><small>AVGO</small></div><div class="price"><span class="p">$328.75</span><span class="c down">▼ 4.52%</span></div></div>
       <span class="tag hold">觀望｜走勢偏弱</span>
       <ul class="why"><li>價格跌破長期平均價，長期趨勢向下</li><li>中期平均價落在長期平均價之下</li><li>離一年來最高點跌了 33%</li></ul>
       <div class="line"><span><b>轉強訊號：</b>收盤站回 $365.32</span><span><b>分析師平均目標價：</b>$527.59（還有 60% 空間）</span></div>
       <span class="line" style="border:0;padding:0">下次財報 12/9（51 天後）</span><details class="news"><summary>最新新聞（英文，3 則）</summary><ul><li><a href="https://finnhub.io/api/news?id=f81e56ca69a5fcfaacd77d3a9630d96359897268651205c32cb90015cce769d2" target="_blank" rel="noopener">What Would Stop The AI Selloff</a><small>SeekingAlpha｜10/19</small></li><li><a href="https://finnhub.io/api/news?id=1c5493f31d7a8440cb57020dd3d892c227f46315cab9124903f86b99cdf53f63" target="_blank" rel="noopener">Intel vs. AMD: The CPU Comeback Has Become a 2-Stock Fight, But 1 Is the Better Buy</a><small>Yahoo｜10/18</small></li><li><a href="https://finnhub.io/api/news?id=57f743c8f642271987dae6f5e86d7fcda59985d7b89227a395e3cb591f5c0007" target="_blank" rel="noopener">Nine Companies, Including Broadcom and Verizon, Object to Their Shares Being Tokenized. Can They Stop It?</a><small>Yahoo｜10/18</small></li></ul></details>
     </article>
-    <article class="stock">
+    <article class="stock act-wait">
       <div class="top"><div class="name"><b>特斯拉</b><small>TSLA</small></div><div class="price"><span class="p">$354.72</span><span class="c down">▼ 2.13%</span></div></div>
       <span class="tag hold">觀望｜走勢偏弱｜10 檔中最弱</span>
       <ul class="why"><li>價格跌破長期平均價，長期趨勢向下</li><li>中期平均價落在長期平均價之下</li><li>離一年來最高點跌了 29%</li></ul>
@@ -358,9 +452,9 @@ footer { font-size: 0.82rem; color: var(--ink-3); text-align: center; }
       <span class="alert">10/21（2 天後）公布財報，財報前後波動會變大</span><details class="news"><summary>最新新聞（英文，3 則）</summary><ul><li><a href="https://finnhub.io/api/news?id=30219052f707d974d708c989bf6827a28ed22bce18fa21ba37c7bd304ffdb8c4" target="_blank" rel="noopener">NIO Stock Climbs Overnight: EV Firm Outsells German Luxury Rivals In China Sales For First Time — CEO Hails Tesla’s Flying Roadster</a><small>Yahoo｜10/19</small></li><li><a href="https://finnhub.io/api/news?id=39a3e45fe00cb49aa7b5fb6765d12adce7a0d00e6d079aa5a6ef77cfab9f604b" target="_blank" rel="noopener">INTC, AMD, MU, SNDK: US Chip Stocks Rebound After Worst Week Since March</a><small>Yahoo｜10/19</small></li><li><a href="https://finnhub.io/api/news?id=1a2e701a4b533b333f361b3a63e36f7840c645ceaa6ad5ec7dd99a649e6795af" target="_blank" rel="noopener">No ‘Black Monday’? Nasdaq, S&amp;P 500, Dow Futures Spike As Big Tech Earnings Loom This Week — Retail Stays Cautious</a><small>Yahoo｜10/19</small></li></ul></details>
     </article>
   </div>
-</section>
+</section></div>
 
-<section class="how" aria-labelledby="h-score">
+<section class="panel" id="score" aria-labelledby="h-score">
   <h2 id="h-score">建議成績單</h2>
   <p>每一次「可考慮買進／賣出」都會記下來，持有 20 個交易日後結算。買進建議要<b>跑贏大盤</b>、賣出建議要<b>跑輸大盤</b>才算說對。</p>
   <ul>
@@ -373,7 +467,7 @@ footer { font-size: 0.82rem; color: var(--ink-3); text-align: center; }
   </table></div>
   <p class="msg">表格只列最近 20 筆。過去表現不代表未來。</p>
 </section>
-<section class="how">
+<section class="panel how" id="how">
   <h2>怎麼看這份日報</h2>
   <ul>
     <li><b>可考慮買進／賣出</b>只在「財報後市場反應」和「股價走勢」同方向時出現，有效 20 個交易日。這是回測裡唯一有支持的組合，但勝率也只有五成多，不是穩賺。</li>
@@ -384,7 +478,7 @@ footer { font-size: 0.82rem; color: var(--ink-3); text-align: center; }
     <li>所有建議都是程式依規則產生的參考，請自行判斷，不要只看這個就下單。</li>
   </ul>
 </section>
-<footer>本日報由程式自動產生，僅供參考，不構成投資建議。投資有風險，請自行判斷。</footer>
-</div>
+<footer>本日報由程式自動產生，僅供參考，不構成投資建議。投資有風險，請自行判斷。<br>資料來源：Yahoo Finance、Finnhub｜每週二至週六 06:30 更新</footer>
+</main>
 </body>
 </html>
