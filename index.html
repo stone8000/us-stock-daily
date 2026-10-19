@@ -251,6 +251,17 @@ a:focus-visible, .btn:focus-visible, .row input:focus-visible, .row select:focus
   .live-head h2::before { animation: pulse 1.6s ease-in-out infinite; }
   @keyframes pulse { 50% { opacity: .3; } }
 }
+
+/* ---------- 短線／波段／長線 ---------- */
+.hz { border: 1px solid var(--line); border-radius: 10px; overflow: hidden; font-size: .86rem; }
+.hz-row { display: grid; grid-template-columns: 4.6rem minmax(0, 1fr) auto; gap: 8px; align-items: center; padding: 6px 10px; border-bottom: 1px solid var(--line); }
+.hz-k { font-weight: 700; line-height: 1.2; }
+.hz-k small { display: block; font-weight: 400; color: var(--ink-3); font-size: .72rem; }
+.hz-v { min-width: 0; }
+.hz-v.up { color: var(--up); font-weight: 500; }
+.hz-v.down { color: var(--down); font-weight: 500; }
+.hz-e { font-size: .72rem; color: var(--ink-3); background: var(--wait-soft); border-radius: 999px; padding: 1px 8px; white-space: nowrap; }
+.hz-ref { padding: 6px 10px; color: var(--ink-3); font-size: .78rem; background: var(--bg); }
 </style>
 </head>
 <body>
@@ -458,32 +469,36 @@ a:focus-visible, .btn:focus-visible, .row input:focus-visible, .row select:focus
 </div>
 <div id="top10" class="stack">
 <section class="group">
-  <div class="group-head"><h2 class="up">持有</h2><span>4 檔｜走勢偏強，已持有可續抱，但沒有新的買進訊號</span></div>
+  <div class="group-head"><h2 class="up">持有</h2><span>4 檔｜波段（約 1 個月）建議｜走勢偏強，已持有可續抱，但沒有新的買進訊號</span></div>
   <div class="cards">
     <article class="stock act-hold">
       <div class="top"><div class="name"><b>蘋果</b><small>AAPL</small></div><div class="price"><span class="p">$343.46</span><span class="c up">▲ 0.43%</span></div></div>
-      <span class="tag hold">持有｜走勢偏強｜10 檔中最強</span>
+      <span class="tag hold">波段：持有｜走勢偏強｜10 檔中最強</span>
+      <div class="hz"><div class="hz-row"><span class="hz-k">短線<small>1～5 天</small></span><span class="hz-v ">沒有訊號</span><span class="hz-e">證據很弱</span></div><div class="hz-row"><span class="hz-k">波段<small>約 1 個月</small></span><span class="hz-v ">持有</span><span class="hz-e">證據：有一點</span></div><div class="hz-row"><span class="hz-k">長線<small>半年以上</small></span><span class="hz-v ">沒有可靠的選股訊號，適合分散、定期定額</span><span class="hz-e">證據：沒有</span></div><div class="hz-ref">長線參考：長期趨勢向上、預估本益比 36</div></div>
       <ul class="why"><li>長期走勢向上</li><li>中長期走勢同步向上</li><li>離一年來最高點只差 1.3%</li></ul>
       <div class="line"><span><b>看錯的訊號：</b>收盤跌破 $325.69</span><span><b>分析師平均目標價：</b>$329.38（已經超過目標價 4%）</span></div>
       <span class="alert">11/2（14 天後）公布財報，財報前後波動會變大</span><details class="news"><summary>最新新聞（英文，3 則）</summary><ul><li><a href="https://finnhub.io/api/news?id=f8c91624c7dd2b2a73c4d464d996cb0f8e46e9ca1a1903634eccf3203b2c4043" target="_blank" rel="noopener">Apple (NASDAQ:AAPL) Sets Up for Breakout With Perfect Technical Rating and Tight Base</a><small>ChartMill｜10/19</small></li><li><a href="https://finnhub.io/api/news?id=906fc32f2a7f70b360ec244c06b372a2e87dbed09b662f4329287b9bf5dd6d82" target="_blank" rel="noopener">QQQ Pulled In $1.66 Billion. The Same Index Trades Under a Cheaper Ticker.</a><small>Yahoo｜10/19</small></li><li><a href="https://finnhub.io/api/news?id=97c8f6aabf002d4a77bbfecc42fb9df15f623f8782804bcb353bd734c684cdc0" target="_blank" rel="noopener">UK regulator set to push Apple to open iPhone payment technology – report</a><small>Yahoo｜10/19</small></li></ul></details>
     </article>
     <article class="stock act-hold">
       <div class="top"><div class="name"><b>微軟</b><small>MSFT</small></div><div class="price"><span class="p">$529.05</span><span class="c down">▼ 1.93%</span></div></div>
-      <span class="tag hold">持有｜走勢偏強</span>
+      <span class="tag hold">波段：持有｜走勢偏強</span>
+      <div class="hz"><div class="hz-row"><span class="hz-k">短線<small>1～5 天</small></span><span class="hz-v ">沒有訊號</span><span class="hz-e">證據很弱</span></div><div class="hz-row"><span class="hz-k">波段<small>約 1 個月</small></span><span class="hz-v ">持有</span><span class="hz-e">證據：有一點</span></div><div class="hz-row"><span class="hz-k">長線<small>半年以上</small></span><span class="hz-v ">沒有可靠的選股訊號，適合分散、定期定額</span><span class="hz-e">證據：沒有</span></div><div class="hz-ref">長線參考：長期趨勢向上、預估本益比 22</div></div>
       <ul class="why"><li>長期走勢向上</li><li>中長期走勢同步向上</li><li>離一年來最高點跌了 4%</li></ul>
       <div class="line"><span><b>看錯的訊號：</b>收盤跌破 $505.37</span><span><b>分析師平均目標價：</b>$599.24（還有 13% 空間）</span></div>
       <span class="alert">10/28（9 天後）公布財報，財報前後波動會變大</span><details class="news"><summary>最新新聞（英文，3 則）</summary><ul><li><a href="https://finnhub.io/api/news?id=89e0b9c9c53449d0702d7f0982ea90fa05ffa3f59ce267bd0fbc8246030db22d" target="_blank" rel="noopener">Prediction: Microsoft Stock Is Going to Soar After Oct. 28</a><small>Yahoo｜10/19</small></li><li><a href="https://finnhub.io/api/news?id=70af1876972539d63f02463bc8576f7bba77adf75e2c718c25b316cc87462600" target="_blank" rel="noopener">Global Nuclear Energy Renaissance and Small Modular Reactor (SMR) Market Strategic Outlook, 2026-2031 | AI Data Center Demand Drives 9.5% CAGR and USD 206.9 Billion by 2031</a><small>Yahoo｜10/19</small></li><li><a href="https://finnhub.io/api/news?id=cd524fb64649f723c312a494a8d001723f6f3bab7d6c1c472ae4142def6def9b" target="_blank" rel="noopener">eMemory/PUFsecurity Showcases OCP S.A.F.E.-Approved PUFrt at OCP Global Summit, Strengthening AI Data Center Security with Caliptra</a><small>Yahoo｜10/19</small></li></ul></details>
     </article>
     <article class="stock act-hold">
       <div class="top"><div class="name"><b>波克夏</b><small>BRK-B</small></div><div class="price"><span class="p">$532.02</span><span class="c up">▲ 1.21%</span></div></div>
-      <span class="tag hold">持有｜走勢偏強</span>
+      <span class="tag hold">波段：持有｜走勢偏強</span>
+      <div class="hz"><div class="hz-row"><span class="hz-k">短線<small>1～5 天</small></span><span class="hz-v ">沒有訊號</span><span class="hz-e">證據很弱</span></div><div class="hz-row"><span class="hz-k">波段<small>約 1 個月</small></span><span class="hz-v ">持有</span><span class="hz-e">證據：有一點</span></div><div class="hz-row"><span class="hz-k">長線<small>半年以上</small></span><span class="hz-v ">沒有可靠的選股訊號，適合分散、定期定額</span><span class="hz-e">證據：沒有</span></div><div class="hz-ref">長線參考：長期趨勢向上、預估本益比 24</div></div>
       <ul class="why"><li>長期走勢向上</li><li>中長期走勢同步向上</li><li>短線漲多了，可能先休息幾天</li></ul>
       <div class="line"><span><b>看錯的訊號：</b>收盤跌破 $508.51</span><span><b>分析師平均目標價：</b>$547.67（還有 3% 空間）</span></div>
       <span class="line" style="border:0;padding:0">下次財報 11/7（19 天後）</span><details class="news"><summary>最新新聞（英文，3 則）</summary><ul><li><a href="https://finnhub.io/api/news?id=ba6d4b4f6d531fe8d661d848a9d8246158883f2baa79d2aebc2af63723c60192" target="_blank" rel="noopener">This Table Explains Exactly Why Warren Buffett and Berkshire Hathaway Have Struggled to Find Stocks to Buy and Where You Can Find Great Value Stocks Right Now</a><small>Yahoo｜10/19</small></li><li><a href="https://finnhub.io/api/news?id=5d8f23d9557baa85623168cb17ee05dc36de6fa5a0df73c44d65a4c53d42031c" target="_blank" rel="noopener">Not So Fast! One Warren Buffett's Core Positions at Berkshire Hathaway May Not Get the Heave-Ho by Successor Greg Abel After All.</a><small>Yahoo｜10/19</small></li><li><a href="https://finnhub.io/api/news?id=81af2cb320a56fbdc28acbfd764d015814181544ed737c7c827733e746cd8b03" target="_blank" rel="noopener">Warren Buffett's Bluntest Warning Yet -- and 3 Stocks Built to Survive It</a><small>Yahoo｜10/19</small></li></ul></details>
     </article>
     <article class="stock act-hold">
       <div class="top"><div class="name"><b>Meta</b><small>META</small></div><div class="price"><span class="p">$709.33</span><span class="c down">▼ 3.72%</span></div></div>
-      <span class="tag hold">持有｜走勢偏強</span>
+      <span class="tag hold">波段：持有｜走勢偏強</span>
+      <div class="hz"><div class="hz-row"><span class="hz-k">短線<small>1～5 天</small></span><span class="hz-v ">沒有訊號</span><span class="hz-e">證據很弱</span></div><div class="hz-row"><span class="hz-k">波段<small>約 1 個月</small></span><span class="hz-v ">持有</span><span class="hz-e">證據：有一點</span></div><div class="hz-row"><span class="hz-k">長線<small>半年以上</small></span><span class="hz-v ">沒有可靠的選股訊號，適合分散、定期定額</span><span class="hz-e">證據：沒有</span></div><div class="hz-ref">長線參考：長期趨勢向上、預估本益比 20</div></div>
       <ul class="why"><li>長期走勢向上</li><li>中長期走勢同步向上</li><li>離一年來最高點跌了 9%</li></ul>
       <div class="line"><span><b>看錯的訊號：</b>收盤跌破 $654.96</span><span><b>分析師平均目標價：</b>$815.29（還有 15% 空間）</span></div>
       <span class="alert">10/21（2 天後）公布財報，財報前後波動會變大</span><details class="news"><summary>最新新聞（英文，3 則）</summary><ul><li><a href="https://finnhub.io/api/news?id=70af1876972539d63f02463bc8576f7bba77adf75e2c718c25b316cc87462600" target="_blank" rel="noopener">Global Nuclear Energy Renaissance and Small Modular Reactor (SMR) Market Strategic Outlook, 2026-2031 | AI Data Center Demand Drives 9.5% CAGR and USD 206.9 Billion by 2031</a><small>Yahoo｜10/19</small></li><li><a href="https://finnhub.io/api/news?id=b3720a354b25f26a0e8fd26ee7835dc50348d8fcfe8000aaffc9e2cc461722d1" target="_blank" rel="noopener">The Trillion-Dollar AI Bet: What It Means for Hyperscaler Investors</a><small>Yahoo｜10/19</small></li><li><a href="https://finnhub.io/api/news?id=7813c90551bed2a1596a8d1552963cf3cc125b7182c3e4c82dc3b7c6f5ac0807" target="_blank" rel="noopener">Stock Market Today: Chip Selloff Hits Day Eight as Nasdaq Logs Its Worst Week Since June</a><small>ChartMill｜10/19</small></li></ul></details>
@@ -491,46 +506,52 @@ a:focus-visible, .btn:focus-visible, .row input:focus-visible, .row select:focus
   </div>
 </section>
 <section class="group">
-  <div class="group-head"><h2 class="" style="color:var(--wait)">觀望</h2><span>6 檔｜走勢不明或偏弱，先不動作</span></div>
+  <div class="group-head"><h2 class="" style="color:var(--wait)">觀望</h2><span>6 檔｜波段（約 1 個月）建議｜走勢不明或偏弱，先不動作</span></div>
   <div class="cards">
     <article class="stock act-wait">
       <div class="top"><div class="name"><b>輝達</b><small>NVDA</small></div><div class="price"><span class="p">$214.13</span><span class="c down">▼ 1.43%</span></div></div>
-      <span class="tag hold">觀望｜方向不明</span>
+      <span class="tag hold">波段：觀望｜方向不明</span>
+      <div class="hz"><div class="hz-row"><span class="hz-k">短線<small>1～5 天</small></span><span class="hz-v ">沒有訊號</span><span class="hz-e">證據很弱</span></div><div class="hz-row"><span class="hz-k">波段<small>約 1 個月</small></span><span class="hz-v ">觀望</span><span class="hz-e">證據：有一點</span></div><div class="hz-row"><span class="hz-k">長線<small>半年以上</small></span><span class="hz-v ">沒有可靠的選股訊號，適合分散、定期定額</span><span class="hz-e">證據：沒有</span></div><div class="hz-ref">長線參考：長期趨勢向上、預估本益比 13</div></div>
       <ul class="why"><li>長期走勢向上</li><li>近兩三個月轉弱，價格在中期平均價之下</li><li>離一年來最高點跌了 12%</li></ul>
       <div class="line"><span><b>轉強訊號：</b>收盤站上 $222.96</span><span><b>轉弱訊號：</b>收盤跌破 $202.66</span><span><b>分析師平均目標價：</b>$328.72（還有 54% 空間）</span></div>
       <span class="line" style="border:0;padding:0">下次財報 11/17（29 天後）</span><details class="news"><summary>最新新聞（英文，3 則）</summary><ul><li><a href="https://finnhub.io/api/news?id=cf7eaa9e8dd56778aa276e7747c21f3d2619dcd72f8ab79a06b86a530602627e" target="_blank" rel="noopener">Is Visa Stock Still a Buy After Gaining 14% This Year?</a><small>Yahoo｜10/19</small></li><li><a href="https://finnhub.io/api/news?id=a959e7a7a7993a6d17ff440b572982e7102b9ca4ec3c8e88eae866743cc1936e" target="_blank" rel="noopener">Global Physical Artificial Intelligence (AI) Market Report 2026-2040 | Market to Reach $3.26 Trillion as Robotics, Autonomous Systems, and Wearables Scale</a><small>Yahoo｜10/19</small></li><li><a href="https://finnhub.io/api/news?id=5d8f23d9557baa85623168cb17ee05dc36de6fa5a0df73c44d65a4c53d42031c" target="_blank" rel="noopener">Not So Fast! One Warren Buffett's Core Positions at Berkshire Hathaway May Not Get the Heave-Ho by Successor Greg Abel After All.</a><small>Yahoo｜10/19</small></li></ul></details>
     </article>
     <article class="stock act-wait">
       <div class="top"><div class="name"><b>亞馬遜</b><small>AMZN</small></div><div class="price"><span class="p">$250.00</span><span class="c down">▼ 1.87%</span></div></div>
-      <span class="tag hold">觀望｜方向不明</span>
+      <span class="tag hold">波段：觀望｜方向不明</span>
+      <div class="hz"><div class="hz-row"><span class="hz-k">短線<small>1～5 天</small></span><span class="hz-v ">沒有訊號</span><span class="hz-e">證據很弱</span></div><div class="hz-row"><span class="hz-k">波段<small>約 1 個月</small></span><span class="hz-v ">觀望</span><span class="hz-e">證據：有一點</span></div><div class="hz-row"><span class="hz-k">長線<small>半年以上</small></span><span class="hz-v ">沒有可靠的選股訊號，適合分散、定期定額</span><span class="hz-e">證據：沒有</span></div><div class="hz-ref">長線參考：長期趨勢向上、預估本益比 24</div></div>
       <ul class="why"><li>長期走勢向上</li><li>近兩三個月轉弱，價格在中期平均價之下</li><li>離一年來最高點跌了 13%</li></ul>
       <div class="line"><span><b>轉強訊號：</b>收盤站上 $257.08</span><span><b>轉弱訊號：</b>收盤跌破 $242.73</span><span><b>分析師平均目標價：</b>$331.46（還有 33% 空間）</span></div>
       <span class="alert">10/29（10 天後）公布財報，財報前後波動會變大</span><details class="news"><summary>最新新聞（英文，3 則）</summary><ul><li><a href="https://finnhub.io/api/news?id=70af1876972539d63f02463bc8576f7bba77adf75e2c718c25b316cc87462600" target="_blank" rel="noopener">Global Nuclear Energy Renaissance and Small Modular Reactor (SMR) Market Strategic Outlook, 2026-2031 | AI Data Center Demand Drives 9.5% CAGR and USD 206.9 Billion by 2031</a><small>Yahoo｜10/19</small></li><li><a href="https://finnhub.io/api/news?id=b3720a354b25f26a0e8fd26ee7835dc50348d8fcfe8000aaffc9e2cc461722d1" target="_blank" rel="noopener">The Trillion-Dollar AI Bet: What It Means for Hyperscaler Investors</a><small>Yahoo｜10/19</small></li><li><a href="https://finnhub.io/api/news?id=e1165cc07d46503327480257cf375752da1201ad763def651f060e74346350ef" target="_blank" rel="noopener">Update: Microsoft's Business Software Proposed to Receive Increased UK Regulatory Scrutiny</a><small>Yahoo｜10/19</small></li></ul></details>
     </article>
     <article class="stock act-wait">
       <div class="top"><div class="name"><b>Google</b><small>GOOGL</small></div><div class="price"><span class="p">$340.59</span><span class="c down">▼ 2.47%</span></div></div>
-      <span class="tag hold">觀望｜方向不明</span>
+      <span class="tag hold">波段：觀望｜方向不明</span>
+      <div class="hz"><div class="hz-row"><span class="hz-k">短線<small>1～5 天</small></span><span class="hz-v ">沒有訊號</span><span class="hz-e">證據很弱</span></div><div class="hz-row"><span class="hz-k">波段<small>約 1 個月</small></span><span class="hz-v ">觀望</span><span class="hz-e">證據：有一點</span></div><div class="hz-row"><span class="hz-k">長線<small>半年以上</small></span><span class="hz-v ">沒有可靠的選股訊號，適合分散、定期定額</span><span class="hz-e">證據：沒有</span></div><div class="hz-ref">長線參考：長期趨勢向上、預估本益比 22</div></div>
       <ul class="why"><li>長期走勢向上</li><li>近兩三個月轉弱，價格在中期平均價之下</li><li>離一年來最高點跌了 17%</li></ul>
       <div class="line"><span><b>轉強訊號：</b>收盤站上 $344.49</span><span><b>轉弱訊號：</b>收盤跌破 $340.56</span><span><b>分析師平均目標價：</b>$430.51（還有 26% 空間）</span></div>
       <span class="alert">10/28（9 天後）公布財報，財報前後波動會變大</span><details class="news"><summary>最新新聞（英文，3 則）</summary><ul><li><a href="https://finnhub.io/api/news?id=70af1876972539d63f02463bc8576f7bba77adf75e2c718c25b316cc87462600" target="_blank" rel="noopener">Global Nuclear Energy Renaissance and Small Modular Reactor (SMR) Market Strategic Outlook, 2026-2031 | AI Data Center Demand Drives 9.5% CAGR and USD 206.9 Billion by 2031</a><small>Yahoo｜10/19</small></li><li><a href="https://finnhub.io/api/news?id=ba6d4b4f6d531fe8d661d848a9d8246158883f2baa79d2aebc2af63723c60192" target="_blank" rel="noopener">This Table Explains Exactly Why Warren Buffett and Berkshire Hathaway Have Struggled to Find Stocks to Buy and Where You Can Find Great Value Stocks Right Now</a><small>Yahoo｜10/19</small></li><li><a href="https://finnhub.io/api/news?id=b3720a354b25f26a0e8fd26ee7835dc50348d8fcfe8000aaffc9e2cc461722d1" target="_blank" rel="noopener">The Trillion-Dollar AI Bet: What It Means for Hyperscaler Investors</a><small>Yahoo｜10/19</small></li></ul></details>
     </article>
     <article class="stock act-wait">
       <div class="top"><div class="name"><b>台積電 ADR</b><small>TSM</small></div><div class="price"><span class="p">$412.61</span><span class="c down">▼ 2.28%</span></div></div>
-      <span class="tag hold">觀望｜方向不明</span>
+      <span class="tag hold">波段：觀望｜方向不明</span>
+      <div class="hz"><div class="hz-row"><span class="hz-k">短線<small>1～5 天</small></span><span class="hz-v down">偏弱：短線先避開</span><span class="hz-e">證據很弱</span></div><div class="hz-row"><span class="hz-k">波段<small>約 1 個月</small></span><span class="hz-v ">觀望</span><span class="hz-e">證據：有一點</span></div><div class="hz-row"><span class="hz-k">長線<small>半年以上</small></span><span class="hz-v ">沒有可靠的選股訊號，適合分散、定期定額</span><span class="hz-e">證據：沒有</span></div><div class="hz-ref">長線參考：長期趨勢向上、預估本益比 18</div></div>
       <ul class="why"><li>長期走勢向上</li><li>近兩三個月轉弱，價格在中期平均價之下</li><li>離一年來最高點跌了 15%</li></ul>
       <div class="line"><span><b>財報反應：</b><span class="down"><b>弱</b></span>（財報後第一天比大盤多跌 2.1%，還有 19 個交易日參考價值較高）</span><span><b>轉強訊號：</b>收盤站上 $433.75</span><span><b>轉弱訊號：</b>收盤跌破 $393.41</span><span><b>分析師平均目標價：</b>$584.39（還有 42% 空間）</span></div>
       <span class="line" style="border:0;padding:0">下次財報 1/14（87 天後）</span><details class="news"><summary>最新新聞（英文，3 則）</summary><ul><li><a href="https://finnhub.io/api/news?id=5c9a058b791abb54d991b66f87cc15847ce9844f9eef1b8610820c30c0c3473f" target="_blank" rel="noopener">ASML: No AI Slowdown In Sight As Orders And Margins Surge</a><small>SeekingAlpha｜10/19</small></li><li><a href="https://finnhub.io/api/news?id=1c5493f31d7a8440cb57020dd3d892c227f46315cab9124903f86b99cdf53f63" target="_blank" rel="noopener">Intel vs. AMD: The CPU Comeback Has Become a 2-Stock Fight, But 1 Is the Better Buy</a><small>Yahoo｜10/18</small></li><li><a href="https://finnhub.io/api/news?id=9b0f0ab6ce0bab2a08e010355a0d6bbb8af3d1b75f4b118960fe710dc79d41c6" target="_blank" rel="noopener">Taiwan Semiconductor Could Partner With Elon Musk’s Terafab, but It Has 1 Condition</a><small>Yahoo｜10/18</small></li></ul></details>
     </article>
     <article class="stock act-wait">
       <div class="top"><div class="name"><b>博通</b><small>AVGO</small></div><div class="price"><span class="p">$328.75</span><span class="c down">▼ 4.52%</span></div></div>
-      <span class="tag hold">觀望｜走勢偏弱</span>
+      <span class="tag hold">波段：觀望｜走勢偏弱</span>
+      <div class="hz"><div class="hz-row"><span class="hz-k">短線<small>1～5 天</small></span><span class="hz-v ">沒有訊號</span><span class="hz-e">證據很弱</span></div><div class="hz-row"><span class="hz-k">波段<small>約 1 個月</small></span><span class="hz-v ">觀望</span><span class="hz-e">證據：有一點</span></div><div class="hz-row"><span class="hz-k">長線<small>半年以上</small></span><span class="hz-v ">沒有可靠的選股訊號，適合分散、定期定額</span><span class="hz-e">證據：沒有</span></div><div class="hz-ref">長線參考：長期趨勢向下、預估本益比 17</div></div>
       <ul class="why"><li>價格跌破長期平均價，長期趨勢向下</li><li>中期平均價落在長期平均價之下</li><li>離一年來最高點跌了 33%</li></ul>
       <div class="line"><span><b>轉強訊號：</b>收盤站回 $365.32</span><span><b>分析師平均目標價：</b>$527.59（還有 60% 空間）</span></div>
       <span class="line" style="border:0;padding:0">下次財報 12/9（51 天後）</span><details class="news"><summary>最新新聞（英文，3 則）</summary><ul><li><a href="https://finnhub.io/api/news?id=7813c90551bed2a1596a8d1552963cf3cc125b7182c3e4c82dc3b7c6f5ac0807" target="_blank" rel="noopener">Stock Market Today: Chip Selloff Hits Day Eight as Nasdaq Logs Its Worst Week Since June</a><small>ChartMill｜10/19</small></li><li><a href="https://finnhub.io/api/news?id=f81e56ca69a5fcfaacd77d3a9630d96359897268651205c32cb90015cce769d2" target="_blank" rel="noopener">What Would Stop The AI Selloff</a><small>SeekingAlpha｜10/19</small></li><li><a href="https://finnhub.io/api/news?id=1c5493f31d7a8440cb57020dd3d892c227f46315cab9124903f86b99cdf53f63" target="_blank" rel="noopener">Intel vs. AMD: The CPU Comeback Has Become a 2-Stock Fight, But 1 Is the Better Buy</a><small>Yahoo｜10/18</small></li></ul></details>
     </article>
     <article class="stock act-wait">
       <div class="top"><div class="name"><b>特斯拉</b><small>TSLA</small></div><div class="price"><span class="p">$354.72</span><span class="c down">▼ 2.13%</span></div></div>
-      <span class="tag hold">觀望｜走勢偏弱｜10 檔中最弱</span>
+      <span class="tag hold">波段：觀望｜走勢偏弱｜10 檔中最弱</span>
+      <div class="hz"><div class="hz-row"><span class="hz-k">短線<small>1～5 天</small></span><span class="hz-v ">沒有訊號</span><span class="hz-e">證據很弱</span></div><div class="hz-row"><span class="hz-k">波段<small>約 1 個月</small></span><span class="hz-v ">觀望</span><span class="hz-e">證據：有一點</span></div><div class="hz-row"><span class="hz-k">長線<small>半年以上</small></span><span class="hz-v ">沒有可靠的選股訊號，適合分散、定期定額</span><span class="hz-e">證據：沒有</span></div><div class="hz-ref">長線參考：長期趨勢向下、預估本益比 164</div></div>
       <ul class="why"><li>價格跌破長期平均價，長期趨勢向下</li><li>中期平均價落在長期平均價之下</li><li>離一年來最高點跌了 29%</li></ul>
       <div class="line"><span><b>轉強訊號：</b>收盤站回 $359.46</span><span><b>分析師平均目標價：</b>$397.83（還有 12% 空間）</span></div>
       <span class="alert">10/21（2 天後）公布財報，財報前後波動會變大</span><details class="news"><summary>最新新聞（英文，3 則）</summary><ul><li><a href="https://finnhub.io/api/news?id=7813c90551bed2a1596a8d1552963cf3cc125b7182c3e4c82dc3b7c6f5ac0807" target="_blank" rel="noopener">Stock Market Today: Chip Selloff Hits Day Eight as Nasdaq Logs Its Worst Week Since June</a><small>ChartMill｜10/19</small></li><li><a href="https://finnhub.io/api/news?id=53b75400ae16484145fc89562d5a50bebc003b7f07b895ea03fad361b2c50bb0" target="_blank" rel="noopener">Why Are Nasdaq Futures Soaring Premarket? NBIS, MU, TSLA, SPCX, ASTS, SLS Stocks In Focus</a><small>Yahoo｜10/19</small></li><li><a href="https://finnhub.io/api/news?id=daceb38f8bb03edebce3123eff6bae0e242cfc178433520b7844dfb44670c79d" target="_blank" rel="noopener">Stock Futures Rebound as Tech Claws Back Losses</a><small>Yahoo｜10/19</small></li></ul></details>
@@ -557,7 +578,7 @@ a:focus-visible, .btn:focus-visible, .row input:focus-visible, .row select:focus
   <h3>散戶熱門股（Reddit WallStreetBets，近 24 小時提及次數）</h3>
   <div class="tbl-wrap"><table class="hold-tbl">
     <thead><tr><th>#</th><th>股票</th><th>提及</th><th>前一天</th><th>變化</th><th>收盤</th><th>漲跌</th></tr></thead>
-    <tbody><tr><td>1</td><td><b>MU</b><small>Micron Technology</small></td><td>77</td><td>41</td><td class="up">+36</td><td>$878.84</td><td class="down">-5.63%</td></tr><tr><td>2</td><td><b>DTE</b><small>DTE Energy</small></td><td>56</td><td>13</td><td class="up">+43</td><td>$129.73</td><td class="up">+1.09%</td></tr><tr><td>3</td><td><b>NBIS</b><small>Nebius Group</small></td><td>51</td><td>31</td><td class="up">+20</td><td>$165.47</td><td class="down">-12.18%</td></tr><tr><td>4</td><td><b>CRWV</b><small>CoreWeave</small></td><td>34</td><td>30</td><td class="up">+4</td><td>$61.39</td><td class="down">-11.91%</td></tr><tr><td>5</td><td><b>NVDA</b><small>輝達</small></td><td>33</td><td>30</td><td class="up">+3</td><td>$214.13</td><td class="down">-1.43%</td></tr><tr><td>6</td><td><b>SOXL</b><small>Direxion Shares ETF Trust - Direxion Daily Semiconductor Bull 3X Share</small></td><td>31</td><td>16</td><td class="up">+15</td><td>$93.67</td><td class="down">-12.74%</td></tr><tr><td>7</td><td><b>SNDK</b><small>Sandisk</small></td><td>30</td><td>24</td><td class="up">+6</td><td>$1,299.30</td><td class="down">-6.85%</td></tr><tr><td>8</td><td><b>AMD</b><small>超微</small></td><td>27</td><td>20</td><td class="up">+7</td><td>$528.75</td><td class="down">-5.95%</td></tr><tr><td>9</td><td><b>ASTS</b><small>AST SpaceMobile</small></td><td>27</td><td>13</td><td class="up">+14</td><td>$40.66</td><td class="down">-8.55%</td></tr><tr><td>10</td><td><b>META</b><small>Meta</small></td><td>21</td><td>15</td><td class="up">+6</td><td>$709.33</td><td class="down">-3.72%</td></tr></tbody></table></div>
+    <tbody><tr><td>1</td><td><b>MU</b><small>Micron Technology</small></td><td>77</td><td>43</td><td class="up">+34</td><td>$878.84</td><td class="down">-5.63%</td></tr><tr><td>2</td><td><b>DTE</b><small>DTE Energy</small></td><td>57</td><td>13</td><td class="up">+44</td><td>$129.73</td><td class="up">+1.09%</td></tr><tr><td>3</td><td><b>NBIS</b><small>Nebius Group</small></td><td>52</td><td>32</td><td class="up">+20</td><td>$165.47</td><td class="down">-12.18%</td></tr><tr><td>4</td><td><b>CRWV</b><small>CoreWeave</small></td><td>34</td><td>30</td><td class="up">+4</td><td>$61.39</td><td class="down">-11.91%</td></tr><tr><td>5</td><td><b>NVDA</b><small>輝達</small></td><td>33</td><td>30</td><td class="up">+3</td><td>$214.13</td><td class="down">-1.43%</td></tr><tr><td>6</td><td><b>SOXL</b><small>Direxion Shares ETF Trust - Direxion Daily Semiconductor Bull 3X Share</small></td><td>31</td><td>16</td><td class="up">+15</td><td>$93.67</td><td class="down">-12.74%</td></tr><tr><td>7</td><td><b>SNDK</b><small>Sandisk</small></td><td>31</td><td>25</td><td class="up">+6</td><td>$1,299.30</td><td class="down">-6.85%</td></tr><tr><td>8</td><td><b>AMD</b><small>超微</small></td><td>27</td><td>20</td><td class="up">+7</td><td>$528.75</td><td class="down">-5.95%</td></tr><tr><td>9</td><td><b>ASTS</b><small>AST SpaceMobile</small></td><td>27</td><td>13</td><td class="up">+14</td><td>$40.66</td><td class="down">-8.55%</td></tr><tr><td>10</td><td><b>META</b><small>Meta</small></td><td>21</td><td>15</td><td class="up">+6</td><td>$709.33</td><td class="down">-3.72%</td></tr></tbody></table></div>
   <h3>內部人買股（近 30 天，S&amp;P 100 公司高層自掏腰包在市場買進）</h3>
   <div class="tbl-wrap"><table class="hold-tbl">
     <thead><tr><th>申報日</th><th>股票</th><th style="text-align:left">買進的人</th><th>股數</th><th>金額</th></tr></thead>
@@ -569,6 +590,7 @@ a:focus-visible, .btn:focus-visible, .row input:focus-visible, .row select:focus
 <section class="panel how" id="how">
   <h2>怎麼看這份日報</h2>
   <ul>
+    <li><b>短線／波段／長線</b>：每張卡片都分三種期限，並標出過去 24 年的證據強弱。短線（1～5 天）證據很弱，波段（約 1 個月）有一點，長線（半年以上）沒有任何選股訊號比隨便買好，所以長線只給分散、定期定額的原則。上方分組與買賣建議都是<b>波段</b>。</li>
     <li><b>可考慮買進</b>都附「何時賣」：最晚第 20 個交易日收盤賣出，在那之前收盤跌破停損價（進場價 − 2×ATR，ATR 是這檔股票平常一天的波動）就提早賣。</li>
     <li><b>可考慮買進／先別買</b>只在「財報後市場反應」和「股價走勢」同方向時出現，有效 20 個交易日。過去 24 年買進建議平均比大盤多約 0.5%、勝率 53%；「先別買」只是提醒現在不適合買進，<b>不是叫你賣</b>；過去 24 年它沒有預測力，成績單持續追蹤。</li>
     <li><b>持有／觀望</b>是平常的狀態：走勢偏強就持有，不明或偏弱就觀望。走勢判斷看的是長期、中期、短期趨勢，以及有沒有比大盤強，它本身<b>無法預測</b>漲跌。</li>
