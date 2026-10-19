@@ -230,6 +230,27 @@ a:focus-visible, .btn:focus-visible, .row input:focus-visible, .row select:focus
   .panel, .mine { padding: 18px; }
   .wrap { gap: 24px; }
 }
+
+/* ---------- 盤前／盤中快訊 ---------- */
+.live { background: var(--card); border: 2px solid var(--gold); border-radius: 16px; box-shadow: var(--shadow); padding: 20px 22px; display: grid; gap: 12px; }
+.live-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 14px; }
+.live-head h2 { font-family: var(--font-head); font-size: 1.35rem; }
+.live-head span { color: var(--ink-3); font-size: .85rem; }
+.live-head h2::before { content: ""; display: inline-block; width: .6em; height: .6em; border-radius: 50%; background: var(--up); margin-right: .45em; vertical-align: .1em; }
+.live-note { color: var(--ink-2); font-size: .88rem; }
+.live-idx { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { display: grid; gap: 0; padding: 8px 12px; border: 1px solid var(--line); border-radius: 12px; background: var(--bg); min-width: 7.5rem; }
+.chip span { font-size: .75rem; color: var(--ink-3); }
+.chip b { font-family: var(--font-num); font-size: 1.05rem; }
+.chip span.up, .chip span.down { font-family: var(--font-num); font-size: .82rem; }
+.live-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr)); gap: 16px; }
+.live h3 { font-size: .95rem; margin-bottom: 6px; }
+.live-movers { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; font-size: .92rem; }
+.live-movers small, .live .hold-tbl small { color: var(--ink-3); }
+@media (prefers-reduced-motion: no-preference) {
+  .live-head h2::before { animation: pulse 1.6s ease-in-out infinite; }
+  @keyframes pulse { 50% { opacity: .3; } }
+}
 </style>
 </head>
 <body>
@@ -258,6 +279,53 @@ a:focus-visible, .btn:focus-visible, .row input:focus-visible, .row select:focus
   <a href="#mine">我的清單</a><a href="#advice">今日建議</a><a href="#today">今天重點</a><a href="#top10">十大股票</a><a href="#score">成績單</a><a href="#spec">投機觀察</a><a href="#how">怎麼看</a>
 </div></nav>
 <main class="wrap">
+<script>window.__names = {"NVDA": "輝達", "AAPL": "蘋果", "GOOGL": "Google", "MSFT": "微軟", "AMZN": "亞馬遜", "TSM": "台積電 ADR", "META": "Meta", "AVGO": "博通", "TSLA": "特斯拉", "BRK-B": "波克夏", "ABBV": "艾伯維", "ABT": "亞培", "ACN": "埃森哲", "ADBE": "Adobe", "AIG": "美國國際集團", "AMD": "超微", "AMGN": "安進", "AMT": "美國電塔", "AXP": "美國運通", "BA": "波音", "BAC": "美國銀行", "BKNG": "Booking", "BLK": "貝萊德", "BMY": "必治妥施貴寶", "C": "花旗", "CAT": "開拓重工", "CHTR": "Charter", "CL": "高露潔", "CMCSA": "康卡斯特", "COF": "第一資本", "COP": "康菲石油", "COST": "好市多", "CRM": "Salesforce", "CSCO": "思科", "CVS": "CVS", "CVX": "雪佛龍", "DE": "迪爾", "DHR": "丹納赫", "DIS": "迪士尼", "DUK": "杜克能源", "EMR": "艾默生", "FDX": "聯邦快遞", "GD": "通用動力", "GE": "奇異", "GILD": "吉利德", "GM": "通用汽車", "GS": "高盛", "HD": "家得寶", "HON": "漢威聯合", "IBM": "IBM", "INTC": "英特爾", "INTU": "Intuit", "ISRG": "直覺外科", "JNJ": "嬌生", "JPM": "摩根大通", "KO": "可口可樂", "LIN": "林德", "LLY": "禮來", "LMT": "洛克希德馬丁", "LOW": "勞氏", "MA": "萬事達卡", "MCD": "麥當勞", "MDLZ": "億滋", "MDT": "美敦力", "MET": "大都會人壽", "MMM": "3M", "MO": "奧馳亞", "MRK": "默克", "MS": "摩根士丹利", "NEE": "新紀元能源", "NFLX": "網飛", "NKE": "Nike", "NOW": "ServiceNow", "ORCL": "甲骨文", "PEP": "百事", "PFE": "輝瑞", "PG": "寶僑", "PLTR": "Palantir", "PM": "菲利普莫里斯", "PYPL": "PayPal", "QCOM": "高通", "RTX": "RTX", "SBUX": "星巴克", "SCHW": "嘉信理財", "SO": "南方電力", "SPG": "西蒙地產", "T": "AT&T", "TGT": "目標百貨", "TMO": "賽默飛", "TMUS": "T-Mobile", "TXN": "德州儀器", "UBER": "Uber", "UNH": "聯合健康", "UNP": "聯合太平洋", "UPS": "UPS", "USB": "美國合眾銀行", "V": "Visa", "VZ": "Verizon", "WFC": "富國銀行", "WMT": "沃爾瑪", "XOM": "埃克森美孚"};</script>
+
+<section class="live" id="live" hidden aria-live="polite">
+  <div class="live-head"><h2 id="liveTitle">盤前快訊</h2><span id="liveTime"></span></div>
+  <p class="live-note">建議與分析仍以前一個交易日收盤為準；這裡只更新即時價格。</p>
+  <div class="live-idx" id="liveIdx"></div>
+  <div class="live-grid">
+    <div><h3>十大股票</h3><div class="tbl-wrap"><table class="hold-tbl" id="liveTop"></table></div></div>
+    <div><h3>漲跌最大（S&amp;P 100）</h3><ul class="live-movers" id="liveMovers"></ul>
+      <p class="msg" id="liveEarn" hidden></p></div>
+  </div>
+</section>
+<script>
+(function () {
+  var bar = document.getElementById("stale").getAttribute("data-bar");
+  function pct(v) { return '<span class="' + (v >= 0 ? "up" : "down") + '">' + (v >= 0 ? "▲ " : "▼ ") + Math.abs(v).toFixed(2) + "%</span>"; }
+  function money(v) { return "$" + v.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+  fetch("live.json", { cache: "no-store" }).then(function (r) { return r.ok ? r.json() : null; }).then(function (L) {
+    if (!L || new Date(L.asof) <= new Date(bar + "T16:00:00-04:00")) return;  // 比收盤日報舊就不顯示
+    window.__live = L;
+    var names = window.__names || {}, q = L.quotes;
+    var tw = new Date(L.asof).toLocaleString("zh-TW", { timeZone: "Asia/Taipei", month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit", hour12: false });
+    document.getElementById("liveTitle").textContent = L.label + "快訊";
+    document.getElementById("liveTime").textContent = "美東 " + L.asof.slice(11, 16) + " 更新（台灣 " + tw + "）";
+    document.getElementById("liveIdx").innerHTML = Object.keys(L.indices).map(function (t) {
+      var x = L.indices[t]; return '<div class="chip"><span>' + x.name + '</span><b>' + x.price.toLocaleString("en-US", { maximumFractionDigits: 2 }) + "</b>" + pct(x.chg) + "</div>";
+    }).join("");
+    document.getElementById("liveTop").innerHTML = "<thead><tr><th>股票</th><th>價格</th><th>漲跌</th><th>時間</th></tr></thead><tbody>" +
+      L.watchlist.map(function (t) {
+        var x = q[t]; return "<tr><td>" + (names[t] || t) + " <small>" + t + "</small></td>" +
+          (x ? "<td>" + money(x.price) + "</td><td>" + pct(x.chg) + "</td><td>" + x.time + "</td>" : '<td colspan="3">尚無成交</td>') + "</tr>";
+      }).join("") + "</tbody>";
+    var ranked = Object.keys(q).filter(function (t) { return !(t in L.indices); }).sort(function (a, b) { return q[b].chg - q[a].chg; });
+    var pick = ranked.slice(0, 3).concat(ranked.slice(-3).reverse());
+    document.getElementById("liveMovers").innerHTML = pick.map(function (t) {
+      return "<li><b>" + (names[t] || t) + "</b> <small>" + t + "</small> " + pct(q[t].chg) + "</li>";
+    }).join("");
+    if (L.earnings_today.length) {
+      var e = document.getElementById("liveEarn"); e.hidden = false;
+      e.textContent = "今天公布財報：" + L.earnings_today.map(function (t) { return (names[t] || t) + "（" + t + "）"; }).join("、") + "。財報後第一天的反應會在收盤後的日報判斷。";
+    }
+    document.getElementById("live").hidden = false;
+    if (window.__mylistRender) window.__mylistRender();
+  }).catch(function () {});
+})();
+</script>
+
 
 <section class="mine" id="mine" aria-labelledby="h-mine">
   <div class="group-head"><h2 id="h-mine">我的清單</h2><span>資料只存在這台裝置的瀏覽器，不會上傳</span></div>
@@ -314,10 +382,11 @@ a:focus-visible, .btn:focus-visible, .row input:focus-visible, .row select:focus
     var rows = "", tv = 0, tc = 0, html = "", trades = [];
     items.forEach(function (it, i) {
       var d = data.stocks[it.t]; if (!d) return;
+      var L = window.__live, lq = L && L.quotes[it.t], px = lq ? lq.price : d.close;
       if (d.action === "buy" || d.action === "sell") trades.push(d.name + "（" + it.t + "）" + (d.action === "buy" ? "可考慮買進" : "先別買"));
       html += d.card.replace(/(<article class="stock[^"]*">)/, '$1<button class="btn ghost small rm" type="button" data-i="' + i + '">移除</button>');
       if (it.sh > 0) {
-        var v = it.sh * d.close, line = '<td>' + esc(d.name) + ' ' + it.t + '</td><td>' + it.sh + '</td><td>' + money(d.close) + '</td><td>' + money(v) + '</td>';
+        var v = it.sh * px, line = '<td>' + esc(d.name) + ' ' + it.t + '</td><td>' + it.sh + '</td><td>' + money(px) + '</td><td>' + money(v) + '</td>';
         tv += v;
         if (it.cost > 0) {
           var c = it.sh * it.cost, pl = v - c, cls = pl >= 0 ? "up" : "down";
@@ -329,7 +398,7 @@ a:focus-visible, .btn:focus-visible, .row input:focus-visible, .row select:focus
     });
     if (rows) {
       var sum = tc > 0 ? ((tv - tc) >= 0 ? "+" : "") + ((tv - tc) / tc * 100).toFixed(1) + "%" : "—";
-      hold.innerHTML = '<table class="hold-tbl"><thead><tr><th>持股</th><th>股數</th><th>現價</th><th>市值</th><th>損益（依買進均價）</th></tr></thead><tbody>' + rows +
+      hold.innerHTML = '<table class="hold-tbl"><thead><tr><th>持股</th><th>股數</th><th>' + (window.__live ? window.__live.label + '價' : '收盤價') + '</th><th>市值</th><th>損益（依買進均價）</th></tr></thead><tbody>' + rows +
         '<tr><td><b>合計</b></td><td></td><td></td><td>' + money(tv) + '</td><td>' + sum + '</td></tr></tbody></table>';
       hold.hidden = false;
     } else { hold.hidden = true; }
@@ -371,9 +440,11 @@ a:focus-visible, .btn:focus-visible, .row input:focus-visible, .row select:focus
     msg("已刪除「" + gone + "」。");
   });
 
+  window.__mylistRender = render;
   render();
   fetch("data.json", { cache: "no-store" }).then(function (r) { return r.json(); }).then(function (d) {
     data = d;
+    window.__names = {}; Object.keys(d.stocks).forEach(function (t) { window.__names[t] = d.stocks[t].name; });
     var dl = $("mList");
     Object.keys(d.stocks).sort().forEach(function (t) { var o = document.createElement("option"); o.value = t; o.label = d.stocks[t].name; dl.appendChild(o); });
     render();
@@ -401,21 +472,21 @@ a:focus-visible, .btn:focus-visible, .row input:focus-visible, .row select:focus
       <span class="tag hold">持有｜走勢偏強</span>
       <ul class="why"><li>長期走勢向上</li><li>中長期走勢同步向上</li><li>離一年來最高點跌了 4%</li></ul>
       <div class="line"><span><b>看錯的訊號：</b>收盤跌破 $505.37</span><span><b>分析師平均目標價：</b>$599.24（還有 13% 空間）</span></div>
-      <span class="alert">10/28（9 天後）公布財報，財報前後波動會變大</span><details class="news"><summary>最新新聞（英文，3 則）</summary><ul><li><a href="https://finnhub.io/api/news?id=a1029f6aefd21b62209500c467accc72023d6fff1318ab7ca11790ff0b70dc98" target="_blank" rel="noopener">Microsoft (NASDAQ:MSFT): Dividend Quality and Safety Over Yield for Income Investors</a><small>ChartMill｜10/19</small></li><li><a href="https://finnhub.io/api/news?id=77d9d8bfb9bee72de133f0d26ae9f7d6aa81123f76e39ea4a330dd955bb47c59" target="_blank" rel="noopener">Microsoft Walks Away From Nscale’s UK Data Center as the Grid Runs Out of Power</a><small>Yahoo｜10/19</small></li><li><a href="https://finnhub.io/api/news?id=9270c233430bc08500f18b366a067338ce46e76dc7533200b4d27d2c32a53bdc" target="_blank" rel="noopener">The Bet Behind Tieto's Rally</a><small>Yahoo｜10/19</small></li></ul></details>
+      <span class="alert">10/28（9 天後）公布財報，財報前後波動會變大</span><details class="news"><summary>最新新聞（英文，3 則）</summary><ul><li><a href="https://finnhub.io/api/news?id=89e0b9c9c53449d0702d7f0982ea90fa05ffa3f59ce267bd0fbc8246030db22d" target="_blank" rel="noopener">Prediction: Microsoft Stock Is Going to Soar After Oct. 28</a><small>Yahoo｜10/19</small></li><li><a href="https://finnhub.io/api/news?id=70af1876972539d63f02463bc8576f7bba77adf75e2c718c25b316cc87462600" target="_blank" rel="noopener">Global Nuclear Energy Renaissance and Small Modular Reactor (SMR) Market Strategic Outlook, 2026-2031 | AI Data Center Demand Drives 9.5% CAGR and USD 206.9 Billion by 2031</a><small>Yahoo｜10/19</small></li><li><a href="https://finnhub.io/api/news?id=cd524fb64649f723c312a494a8d001723f6f3bab7d6c1c472ae4142def6def9b" target="_blank" rel="noopener">eMemory/PUFsecurity Showcases OCP S.A.F.E.-Approved PUFrt at OCP Global Summit, Strengthening AI Data Center Security with Caliptra</a><small>Yahoo｜10/19</small></li></ul></details>
     </article>
     <article class="stock act-hold">
       <div class="top"><div class="name"><b>波克夏</b><small>BRK-B</small></div><div class="price"><span class="p">$532.02</span><span class="c up">▲ 1.21%</span></div></div>
       <span class="tag hold">持有｜走勢偏強</span>
       <ul class="why"><li>長期走勢向上</li><li>中長期走勢同步向上</li><li>短線漲多了，可能先休息幾天</li></ul>
       <div class="line"><span><b>看錯的訊號：</b>收盤跌破 $508.51</span><span><b>分析師平均目標價：</b>$547.67（還有 3% 空間）</span></div>
-      <span class="line" style="border:0;padding:0">下次財報 11/7（19 天後）</span><details class="news"><summary>最新新聞（英文，3 則）</summary><ul><li><a href="https://finnhub.io/api/news?id=343a8280b97ee2beb305a37aaf5d5e4c490fd1015eb7a8ba8b6f108526c1474a" target="_blank" rel="noopener">Berkshire Hathaway (BRK.B) After Buffett: Can Its Capital Allocation Machine Keep Compounding?</a><small>Yahoo｜10/18</small></li><li><a href="https://finnhub.io/api/news?id=7f1abb7015adde4644b22f6b067bde1de6427ea1b0ed36727396aeade07a15a4" target="_blank" rel="noopener">Berkshire Hathaway CEO Greg Abel Leads Huge Investment In Bending Spoons</a><small>Yahoo｜10/18</small></li><li><a href="https://finnhub.io/api/news?id=20b3248aa26392d4663278bc6d5be6fa65d0e4e80fee8891e032764d2f58a8ec" target="_blank" rel="noopener">Warren Buffett Says He Has "Never Felt Better" About Berkshire Hathaway's Future as He Steps Down as Chairman at 96</a><small>Yahoo｜10/18</small></li></ul></details>
+      <span class="line" style="border:0;padding:0">下次財報 11/7（19 天後）</span><details class="news"><summary>最新新聞（英文，3 則）</summary><ul><li><a href="https://finnhub.io/api/news?id=ba6d4b4f6d531fe8d661d848a9d8246158883f2baa79d2aebc2af63723c60192" target="_blank" rel="noopener">This Table Explains Exactly Why Warren Buffett and Berkshire Hathaway Have Struggled to Find Stocks to Buy and Where You Can Find Great Value Stocks Right Now</a><small>Yahoo｜10/19</small></li><li><a href="https://finnhub.io/api/news?id=5d8f23d9557baa85623168cb17ee05dc36de6fa5a0df73c44d65a4c53d42031c" target="_blank" rel="noopener">Not So Fast! One Warren Buffett's Core Positions at Berkshire Hathaway May Not Get the Heave-Ho by Successor Greg Abel After All.</a><small>Yahoo｜10/19</small></li><li><a href="https://finnhub.io/api/news?id=81af2cb320a56fbdc28acbfd764d015814181544ed737c7c827733e746cd8b03" target="_blank" rel="noopener">Warren Buffett's Bluntest Warning Yet -- and 3 Stocks Built to Survive It</a><small>Yahoo｜10/19</small></li></ul></details>
     </article>
     <article class="stock act-hold">
       <div class="top"><div class="name"><b>Meta</b><small>META</small></div><div class="price"><span class="p">$709.33</span><span class="c down">▼ 3.72%</span></div></div>
       <span class="tag hold">持有｜走勢偏強</span>
       <ul class="why"><li>長期走勢向上</li><li>中長期走勢同步向上</li><li>離一年來最高點跌了 9%</li></ul>
       <div class="line"><span><b>看錯的訊號：</b>收盤跌破 $654.96</span><span><b>分析師平均目標價：</b>$815.29（還有 15% 空間）</span></div>
-      <span class="alert">10/21（2 天後）公布財報，財報前後波動會變大</span><details class="news"><summary>最新新聞（英文，3 則）</summary><ul><li><a href="https://finnhub.io/api/news?id=1274b49925fcbd514117dddc5e4b133bcf658a84a1802f7b4e0a68cd5e6c68f0" target="_blank" rel="noopener">Stocktwits Tech Watch: Netflix And Meta Report Earnings As Nvidia, Oracle Product Events Loom</a><small>Yahoo｜10/19</small></li><li><a href="https://finnhub.io/api/news?id=39a3e45fe00cb49aa7b5fb6765d12adce7a0d00e6d079aa5a6ef77cfab9f604b" target="_blank" rel="noopener">INTC, AMD, MU, SNDK: US Chip Stocks Rebound After Worst Week Since March</a><small>Yahoo｜10/19</small></li><li><a href="https://finnhub.io/api/news?id=1a2e701a4b533b333f361b3a63e36f7840c645ceaa6ad5ec7dd99a649e6795af" target="_blank" rel="noopener">No ‘Black Monday’? Nasdaq, S&amp;P 500, Dow Futures Spike As Big Tech Earnings Loom This Week — Retail Stays Cautious</a><small>Yahoo｜10/19</small></li></ul></details>
+      <span class="alert">10/21（2 天後）公布財報，財報前後波動會變大</span><details class="news"><summary>最新新聞（英文，3 則）</summary><ul><li><a href="https://finnhub.io/api/news?id=70af1876972539d63f02463bc8576f7bba77adf75e2c718c25b316cc87462600" target="_blank" rel="noopener">Global Nuclear Energy Renaissance and Small Modular Reactor (SMR) Market Strategic Outlook, 2026-2031 | AI Data Center Demand Drives 9.5% CAGR and USD 206.9 Billion by 2031</a><small>Yahoo｜10/19</small></li><li><a href="https://finnhub.io/api/news?id=b3720a354b25f26a0e8fd26ee7835dc50348d8fcfe8000aaffc9e2cc461722d1" target="_blank" rel="noopener">The Trillion-Dollar AI Bet: What It Means for Hyperscaler Investors</a><small>Yahoo｜10/19</small></li><li><a href="https://finnhub.io/api/news?id=7813c90551bed2a1596a8d1552963cf3cc125b7182c3e4c82dc3b7c6f5ac0807" target="_blank" rel="noopener">Stock Market Today: Chip Selloff Hits Day Eight as Nasdaq Logs Its Worst Week Since June</a><small>ChartMill｜10/19</small></li></ul></details>
     </article>
   </div>
 </section>
@@ -427,21 +498,21 @@ a:focus-visible, .btn:focus-visible, .row input:focus-visible, .row select:focus
       <span class="tag hold">觀望｜方向不明</span>
       <ul class="why"><li>長期走勢向上</li><li>近兩三個月轉弱，價格在中期平均價之下</li><li>離一年來最高點跌了 12%</li></ul>
       <div class="line"><span><b>轉強訊號：</b>收盤站上 $222.96</span><span><b>轉弱訊號：</b>收盤跌破 $202.66</span><span><b>分析師平均目標價：</b>$328.72（還有 54% 空間）</span></div>
-      <span class="line" style="border:0;padding:0">下次財報 11/17（29 天後）</span><details class="news"><summary>最新新聞（英文，3 則）</summary><ul><li><a href="https://finnhub.io/api/news?id=38b918beea7024a41bab623d73682ac17b3196b4f310bf4b22e775b99ee40d89" target="_blank" rel="noopener">Nebius Stock Has Fallen About 40% From Its Record. Here's Why I'm Still Waiting to Buy.</a><small>Yahoo｜10/19</small></li><li><a href="https://finnhub.io/api/news?id=6942a4981582beab86293c51e5392e9bf3775ff3d1afa76104e7e151c4b74f32" target="_blank" rel="noopener">Reply Earns "NVIDIA Physical AI Specialization" for Production-Ready Robotics and Digital Twins</a><small>Yahoo｜10/19</small></li><li><a href="https://finnhub.io/api/news?id=3f9f18b50e7823c23f0c687a982533777fbae77831ea9209d74a1c9cd11261cb" target="_blank" rel="noopener">A Micron Union in Taiwan Voted 99% to Authorize a Strike. Should You Sell the Stock?</a><small>Yahoo｜10/19</small></li></ul></details>
+      <span class="line" style="border:0;padding:0">下次財報 11/17（29 天後）</span><details class="news"><summary>最新新聞（英文，3 則）</summary><ul><li><a href="https://finnhub.io/api/news?id=cf7eaa9e8dd56778aa276e7747c21f3d2619dcd72f8ab79a06b86a530602627e" target="_blank" rel="noopener">Is Visa Stock Still a Buy After Gaining 14% This Year?</a><small>Yahoo｜10/19</small></li><li><a href="https://finnhub.io/api/news?id=a959e7a7a7993a6d17ff440b572982e7102b9ca4ec3c8e88eae866743cc1936e" target="_blank" rel="noopener">Global Physical Artificial Intelligence (AI) Market Report 2026-2040 | Market to Reach $3.26 Trillion as Robotics, Autonomous Systems, and Wearables Scale</a><small>Yahoo｜10/19</small></li><li><a href="https://finnhub.io/api/news?id=5d8f23d9557baa85623168cb17ee05dc36de6fa5a0df73c44d65a4c53d42031c" target="_blank" rel="noopener">Not So Fast! One Warren Buffett's Core Positions at Berkshire Hathaway May Not Get the Heave-Ho by Successor Greg Abel After All.</a><small>Yahoo｜10/19</small></li></ul></details>
     </article>
     <article class="stock act-wait">
       <div class="top"><div class="name"><b>亞馬遜</b><small>AMZN</small></div><div class="price"><span class="p">$250.00</span><span class="c down">▼ 1.87%</span></div></div>
       <span class="tag hold">觀望｜方向不明</span>
       <ul class="why"><li>長期走勢向上</li><li>近兩三個月轉弱，價格在中期平均價之下</li><li>離一年來最高點跌了 13%</li></ul>
       <div class="line"><span><b>轉強訊號：</b>收盤站上 $257.08</span><span><b>轉弱訊號：</b>收盤跌破 $242.73</span><span><b>分析師平均目標價：</b>$331.46（還有 33% 空間）</span></div>
-      <span class="alert">10/29（10 天後）公布財報，財報前後波動會變大</span><details class="news"><summary>最新新聞（英文，3 則）</summary><ul><li><a href="https://finnhub.io/api/news?id=e7a17dae73f5c96c60a7a65f8969b572409d5f7aa5f34c163e9ab8ee978c34c1" target="_blank" rel="noopener">Amazon.com And 2 Other Undervalued Stocks</a><small>Yahoo｜10/19</small></li><li><a href="https://finnhub.io/api/news?id=8b69def7e68853c334725234bf7dd16b9393022b4dee0bbda9f2dbd52e29a622" target="_blank" rel="noopener">Prediction: Amazon Stock Will Soar After Oct. 29</a><small>Yahoo｜10/19</small></li><li><a href="https://finnhub.io/api/news?id=8b19d1717a0d909f6363222d686863c3f4fb2b1cff6f51dc036eeabdb9f7537c" target="_blank" rel="noopener">Amazon.com vs. Walmart: Which Stock Is a Better Buy in 2026?</a><small>Yahoo｜10/19</small></li></ul></details>
+      <span class="alert">10/29（10 天後）公布財報，財報前後波動會變大</span><details class="news"><summary>最新新聞（英文，3 則）</summary><ul><li><a href="https://finnhub.io/api/news?id=70af1876972539d63f02463bc8576f7bba77adf75e2c718c25b316cc87462600" target="_blank" rel="noopener">Global Nuclear Energy Renaissance and Small Modular Reactor (SMR) Market Strategic Outlook, 2026-2031 | AI Data Center Demand Drives 9.5% CAGR and USD 206.9 Billion by 2031</a><small>Yahoo｜10/19</small></li><li><a href="https://finnhub.io/api/news?id=b3720a354b25f26a0e8fd26ee7835dc50348d8fcfe8000aaffc9e2cc461722d1" target="_blank" rel="noopener">The Trillion-Dollar AI Bet: What It Means for Hyperscaler Investors</a><small>Yahoo｜10/19</small></li><li><a href="https://finnhub.io/api/news?id=e1165cc07d46503327480257cf375752da1201ad763def651f060e74346350ef" target="_blank" rel="noopener">Update: Microsoft's Business Software Proposed to Receive Increased UK Regulatory Scrutiny</a><small>Yahoo｜10/19</small></li></ul></details>
     </article>
     <article class="stock act-wait">
       <div class="top"><div class="name"><b>Google</b><small>GOOGL</small></div><div class="price"><span class="p">$340.59</span><span class="c down">▼ 2.47%</span></div></div>
       <span class="tag hold">觀望｜方向不明</span>
       <ul class="why"><li>長期走勢向上</li><li>近兩三個月轉弱，價格在中期平均價之下</li><li>離一年來最高點跌了 17%</li></ul>
       <div class="line"><span><b>轉強訊號：</b>收盤站上 $344.49</span><span><b>轉弱訊號：</b>收盤跌破 $340.56</span><span><b>分析師平均目標價：</b>$430.51（還有 26% 空間）</span></div>
-      <span class="alert">10/28（9 天後）公布財報，財報前後波動會變大</span><details class="news"><summary>最新新聞（英文，3 則）</summary><ul><li><a href="https://finnhub.io/api/news?id=833bc80d9748fdde323eb686e9f8065372b20c6efd59e1202148bb04a26a5e57" target="_blank" rel="noopener">Trump’s $330 Million White House Ballroom Donor List Reveals Nvidia, Apple and Google Among Top Tech Contributors: Report (UPDATED)</a><small>Yahoo｜10/19</small></li><li><a href="https://finnhub.io/api/news?id=c17003935bf1124cabd573194be1f91c91ed2b180d26b06a704951188042e8b6" target="_blank" rel="noopener">CoreWeave, Oracle have an interest rate problem</a><small>Yahoo｜10/19</small></li><li><a href="https://finnhub.io/api/news?id=f3c21b9b15ab6d2c2155514d5e7ca74b19ec648f08be4dc979726c2bf9a4b8bb" target="_blank" rel="noopener">OpenAI, Anthropic’s AI Lead Is ‘Very Perishable,’ IMD Professor Says: ‘You Don’t Need to Drive a Ferrari to Go to Walmart’</a><small>Yahoo｜10/19</small></li></ul></details>
+      <span class="alert">10/28（9 天後）公布財報，財報前後波動會變大</span><details class="news"><summary>最新新聞（英文，3 則）</summary><ul><li><a href="https://finnhub.io/api/news?id=70af1876972539d63f02463bc8576f7bba77adf75e2c718c25b316cc87462600" target="_blank" rel="noopener">Global Nuclear Energy Renaissance and Small Modular Reactor (SMR) Market Strategic Outlook, 2026-2031 | AI Data Center Demand Drives 9.5% CAGR and USD 206.9 Billion by 2031</a><small>Yahoo｜10/19</small></li><li><a href="https://finnhub.io/api/news?id=ba6d4b4f6d531fe8d661d848a9d8246158883f2baa79d2aebc2af63723c60192" target="_blank" rel="noopener">This Table Explains Exactly Why Warren Buffett and Berkshire Hathaway Have Struggled to Find Stocks to Buy and Where You Can Find Great Value Stocks Right Now</a><small>Yahoo｜10/19</small></li><li><a href="https://finnhub.io/api/news?id=b3720a354b25f26a0e8fd26ee7835dc50348d8fcfe8000aaffc9e2cc461722d1" target="_blank" rel="noopener">The Trillion-Dollar AI Bet: What It Means for Hyperscaler Investors</a><small>Yahoo｜10/19</small></li></ul></details>
     </article>
     <article class="stock act-wait">
       <div class="top"><div class="name"><b>台積電 ADR</b><small>TSM</small></div><div class="price"><span class="p">$412.61</span><span class="c down">▼ 2.28%</span></div></div>
@@ -455,14 +526,14 @@ a:focus-visible, .btn:focus-visible, .row input:focus-visible, .row select:focus
       <span class="tag hold">觀望｜走勢偏弱</span>
       <ul class="why"><li>價格跌破長期平均價，長期趨勢向下</li><li>中期平均價落在長期平均價之下</li><li>離一年來最高點跌了 33%</li></ul>
       <div class="line"><span><b>轉強訊號：</b>收盤站回 $365.32</span><span><b>分析師平均目標價：</b>$527.59（還有 60% 空間）</span></div>
-      <span class="line" style="border:0;padding:0">下次財報 12/9（51 天後）</span><details class="news"><summary>最新新聞（英文，3 則）</summary><ul><li><a href="https://finnhub.io/api/news?id=f81e56ca69a5fcfaacd77d3a9630d96359897268651205c32cb90015cce769d2" target="_blank" rel="noopener">What Would Stop The AI Selloff</a><small>SeekingAlpha｜10/19</small></li><li><a href="https://finnhub.io/api/news?id=1c5493f31d7a8440cb57020dd3d892c227f46315cab9124903f86b99cdf53f63" target="_blank" rel="noopener">Intel vs. AMD: The CPU Comeback Has Become a 2-Stock Fight, But 1 Is the Better Buy</a><small>Yahoo｜10/18</small></li><li><a href="https://finnhub.io/api/news?id=57f743c8f642271987dae6f5e86d7fcda59985d7b89227a395e3cb591f5c0007" target="_blank" rel="noopener">Nine Companies, Including Broadcom and Verizon, Object to Their Shares Being Tokenized. Can They Stop It?</a><small>Yahoo｜10/18</small></li></ul></details>
+      <span class="line" style="border:0;padding:0">下次財報 12/9（51 天後）</span><details class="news"><summary>最新新聞（英文，3 則）</summary><ul><li><a href="https://finnhub.io/api/news?id=7813c90551bed2a1596a8d1552963cf3cc125b7182c3e4c82dc3b7c6f5ac0807" target="_blank" rel="noopener">Stock Market Today: Chip Selloff Hits Day Eight as Nasdaq Logs Its Worst Week Since June</a><small>ChartMill｜10/19</small></li><li><a href="https://finnhub.io/api/news?id=f81e56ca69a5fcfaacd77d3a9630d96359897268651205c32cb90015cce769d2" target="_blank" rel="noopener">What Would Stop The AI Selloff</a><small>SeekingAlpha｜10/19</small></li><li><a href="https://finnhub.io/api/news?id=1c5493f31d7a8440cb57020dd3d892c227f46315cab9124903f86b99cdf53f63" target="_blank" rel="noopener">Intel vs. AMD: The CPU Comeback Has Become a 2-Stock Fight, But 1 Is the Better Buy</a><small>Yahoo｜10/18</small></li></ul></details>
     </article>
     <article class="stock act-wait">
       <div class="top"><div class="name"><b>特斯拉</b><small>TSLA</small></div><div class="price"><span class="p">$354.72</span><span class="c down">▼ 2.13%</span></div></div>
       <span class="tag hold">觀望｜走勢偏弱｜10 檔中最弱</span>
       <ul class="why"><li>價格跌破長期平均價，長期趨勢向下</li><li>中期平均價落在長期平均價之下</li><li>離一年來最高點跌了 29%</li></ul>
       <div class="line"><span><b>轉強訊號：</b>收盤站回 $359.46</span><span><b>分析師平均目標價：</b>$397.83（還有 12% 空間）</span></div>
-      <span class="alert">10/21（2 天後）公布財報，財報前後波動會變大</span><details class="news"><summary>最新新聞（英文，3 則）</summary><ul><li><a href="https://finnhub.io/api/news?id=d82a16fbf9f98a70d8af3d1ac840f9292639fb326ae466eedf8f796a01d03038" target="_blank" rel="noopener">TSLA, SPCX Eye Green Open: Gary Black Predicts $420 SpaceX Buyout Of Tesla — Sees Announcement In ‘Next Few Weeks’</a><small>Yahoo｜10/19</small></li><li><a href="https://finnhub.io/api/news?id=30219052f707d974d708c989bf6827a28ed22bce18fa21ba37c7bd304ffdb8c4" target="_blank" rel="noopener">NIO Stock Climbs Overnight: EV Firm Outsells German Luxury Rivals In China Sales For First Time — CEO Hails Tesla’s Flying Roadster</a><small>Yahoo｜10/19</small></li><li><a href="https://finnhub.io/api/news?id=5acd642d5fa24b71717f7e2677ee1b01ccdc9c9a89dba2e3c935a8a0eebc5010" target="_blank" rel="noopener">Elon Musk Says AI And Robots Are The Only Way To Solve America's $40 Trillion Debt Problem — ‘We’re Not Gonna Save Our Way There’</a><small>Yahoo｜10/19</small></li></ul></details>
+      <span class="alert">10/21（2 天後）公布財報，財報前後波動會變大</span><details class="news"><summary>最新新聞（英文，3 則）</summary><ul><li><a href="https://finnhub.io/api/news?id=7813c90551bed2a1596a8d1552963cf3cc125b7182c3e4c82dc3b7c6f5ac0807" target="_blank" rel="noopener">Stock Market Today: Chip Selloff Hits Day Eight as Nasdaq Logs Its Worst Week Since June</a><small>ChartMill｜10/19</small></li><li><a href="https://finnhub.io/api/news?id=53b75400ae16484145fc89562d5a50bebc003b7f07b895ea03fad361b2c50bb0" target="_blank" rel="noopener">Why Are Nasdaq Futures Soaring Premarket? NBIS, MU, TSLA, SPCX, ASTS, SLS Stocks In Focus</a><small>Yahoo｜10/19</small></li><li><a href="https://finnhub.io/api/news?id=daceb38f8bb03edebce3123eff6bae0e242cfc178433520b7844dfb44670c79d" target="_blank" rel="noopener">Stock Futures Rebound as Tech Claws Back Losses</a><small>Yahoo｜10/19</small></li></ul></details>
     </article>
   </div>
 </section></div>
@@ -486,7 +557,7 @@ a:focus-visible, .btn:focus-visible, .row input:focus-visible, .row select:focus
   <h3>散戶熱門股（Reddit WallStreetBets，近 24 小時提及次數）</h3>
   <div class="tbl-wrap"><table class="hold-tbl">
     <thead><tr><th>#</th><th>股票</th><th>提及</th><th>前一天</th><th>變化</th><th>收盤</th><th>漲跌</th></tr></thead>
-    <tbody><tr><td>1</td><td><b>MU</b><small>Micron Technology</small></td><td>73</td><td>40</td><td class="up">+33</td><td>$878.84</td><td class="down">-5.63%</td></tr><tr><td>2</td><td><b>DTE</b><small>DTE Energy</small></td><td>56</td><td>13</td><td class="up">+43</td><td>$129.73</td><td class="up">+1.09%</td></tr><tr><td>3</td><td><b>NBIS</b><small>Nebius Group</small></td><td>51</td><td>31</td><td class="up">+20</td><td>$165.47</td><td class="down">-12.18%</td></tr><tr><td>4</td><td><b>CRWV</b><small>CoreWeave</small></td><td>34</td><td>30</td><td class="up">+4</td><td>$61.39</td><td class="down">-11.91%</td></tr><tr><td>5</td><td><b>NVDA</b><small>輝達</small></td><td>33</td><td>30</td><td class="up">+3</td><td>$214.13</td><td class="down">-1.43%</td></tr><tr><td>6</td><td><b>SOXL</b><small>Direxion Shares ETF Trust - Direxion Daily Semiconductor Bull 3X Share</small></td><td>31</td><td>15</td><td class="up">+16</td><td>$93.67</td><td class="down">-12.74%</td></tr><tr><td>7</td><td><b>AMD</b><small>超微</small></td><td>28</td><td>19</td><td class="up">+9</td><td>$528.75</td><td class="down">-5.95%</td></tr><tr><td>8</td><td><b>ASTS</b><small>AST SpaceMobile</small></td><td>28</td><td>14</td><td class="up">+14</td><td>$40.66</td><td class="down">-8.55%</td></tr><tr><td>9</td><td><b>SNDK</b><small>Sandisk</small></td><td>27</td><td>24</td><td class="up">+3</td><td>$1,299.30</td><td class="down">-6.85%</td></tr><tr><td>10</td><td><b>VOO</b><small>Vanguard S&amp;amp;P 500 ETF</small></td><td>20</td><td>22</td><td class="down">-2</td><td>$701.61</td><td class="down">-1.10%</td></tr></tbody></table></div>
+    <tbody><tr><td>1</td><td><b>MU</b><small>Micron Technology</small></td><td>77</td><td>41</td><td class="up">+36</td><td>$878.84</td><td class="down">-5.63%</td></tr><tr><td>2</td><td><b>DTE</b><small>DTE Energy</small></td><td>56</td><td>13</td><td class="up">+43</td><td>$129.73</td><td class="up">+1.09%</td></tr><tr><td>3</td><td><b>NBIS</b><small>Nebius Group</small></td><td>51</td><td>31</td><td class="up">+20</td><td>$165.47</td><td class="down">-12.18%</td></tr><tr><td>4</td><td><b>CRWV</b><small>CoreWeave</small></td><td>34</td><td>30</td><td class="up">+4</td><td>$61.39</td><td class="down">-11.91%</td></tr><tr><td>5</td><td><b>NVDA</b><small>輝達</small></td><td>33</td><td>30</td><td class="up">+3</td><td>$214.13</td><td class="down">-1.43%</td></tr><tr><td>6</td><td><b>SOXL</b><small>Direxion Shares ETF Trust - Direxion Daily Semiconductor Bull 3X Share</small></td><td>31</td><td>16</td><td class="up">+15</td><td>$93.67</td><td class="down">-12.74%</td></tr><tr><td>7</td><td><b>SNDK</b><small>Sandisk</small></td><td>30</td><td>24</td><td class="up">+6</td><td>$1,299.30</td><td class="down">-6.85%</td></tr><tr><td>8</td><td><b>AMD</b><small>超微</small></td><td>27</td><td>20</td><td class="up">+7</td><td>$528.75</td><td class="down">-5.95%</td></tr><tr><td>9</td><td><b>ASTS</b><small>AST SpaceMobile</small></td><td>27</td><td>13</td><td class="up">+14</td><td>$40.66</td><td class="down">-8.55%</td></tr><tr><td>10</td><td><b>META</b><small>Meta</small></td><td>21</td><td>15</td><td class="up">+6</td><td>$709.33</td><td class="down">-3.72%</td></tr></tbody></table></div>
   <h3>內部人買股（近 30 天，S&amp;P 100 公司高層自掏腰包在市場買進）</h3>
   <div class="tbl-wrap"><table class="hold-tbl">
     <thead><tr><th>申報日</th><th>股票</th><th style="text-align:left">買進的人</th><th>股數</th><th>金額</th></tr></thead>
