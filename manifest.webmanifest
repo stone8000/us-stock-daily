@@ -1,0 +1,25 @@
+{
+ "name": "美股十大日報",
+ "short_name": "美股日報",
+ "description": "美國市值前 10 大公司的每日重點、盤前與盤中快訊、我的清單",
+ "start_url": "./",
+ "scope": "./",
+ "display": "standalone",
+ "background_color": "#0d1b33",
+ "theme_color": "#0d1b33",
+ "lang": "zh-Hant",
+ "icons": [
+  {
+   "src": "icon-192.png",
+   "sizes": "192x192",
+   "type": "image/png",
+   "purpose": "any maskable"
+  },
+  {
+   "src": "icon-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "any maskable"
+  }
+ ]
+}
