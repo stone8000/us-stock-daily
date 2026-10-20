@@ -22,7 +22,7 @@
   --card: #ffffff;
   --ink: #121a26;
   --ink-2: #4c5768;
-  --ink-3: #8a93a2;
+  --ink-3: #636c7a;  /* 對淺灰底 ≥ 4.5:1 */
   --line: #e2e6ec;
   --brand: #1b3158;
   --gold: #c9a24a;
@@ -32,7 +32,7 @@
   --down-soft: #e2f4ea;
   --wait: #6b7480;
   --wait-soft: #edf0f3;
-  --warn: #b56b00;
+  --warn: #965800;
   --warn-soft: #fdf2dd;
   --shadow: 0 1px 2px rgba(18, 26, 38, .04), 0 4px 16px rgba(18, 26, 38, .06);
   --hero-1: #0d1b33;
@@ -47,7 +47,7 @@
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #0c1118; --card: #141b25; --ink: #e7ecf2; --ink-2: #a9b4c2; --ink-3: #748093; --line: #253041;
+    --bg: #0c1118; --card: #141b25; --ink: #e7ecf2; --ink-2: #a9b4c2; --ink-3: #8591a3; --line: #253041;
     --brand: #9cc0f5; --gold: #d9b764; --up: #ff6a6a; --up-soft: #3a1c20; --down: #34cf8b; --down-soft: #11301f;
     --wait: #9aa5b2; --wait-soft: #1f2732; --warn: #f2b34c; --warn-soft: #34280f;
     --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 4px 16px rgba(0, 0, 0, .25);
@@ -55,7 +55,7 @@
   }
 }
 :root[data-theme="dark"] {
-  --bg: #0c1118; --card: #141b25; --ink: #e7ecf2; --ink-2: #a9b4c2; --ink-3: #748093; --line: #253041;
+  --bg: #0c1118; --card: #141b25; --ink: #e7ecf2; --ink-2: #a9b4c2; --ink-3: #8591a3; --line: #253041;
   --brand: #9cc0f5; --gold: #d9b764; --up: #ff6a6a; --up-soft: #3a1c20; --down: #34cf8b; --down-soft: #11301f;
   --wait: #9aa5b2; --wait-soft: #1f2732; --warn: #f2b34c; --warn-soft: #34280f;
   --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 4px 16px rgba(0, 0, 0, .25);
@@ -278,6 +278,11 @@ a:focus-visible, .btn:focus-visible, .row input:focus-visible, .row select:focus
 .hz-v.down { color: var(--down); font-weight: 500; }
 .hz-e { font-size: .72rem; color: var(--ink-3); background: var(--wait-soft); border-radius: 999px; padding: 1px 8px; white-space: nowrap; }
 .hz-ref { padding: 6px 10px; color: var(--ink-3); font-size: .78rem; background: var(--bg); }
+@media (max-width: 560px) {
+  /* 手機：證據標籤移到建議下面，不擠壓建議文字 */
+  .hz-row { grid-template-columns: 4.2rem minmax(0, 1fr); row-gap: 2px; }
+  .hz-e { grid-column: 2; justify-self: start; white-space: normal; }
+}
 
 /* ---------- 投機區的期限標示 ---------- */
 .hz-chip { display: inline-block; font-size: .78rem; font-weight: 700; color: var(--warn); background: var(--warn-soft);
@@ -626,13 +631,13 @@ a:focus-visible, .btn:focus-visible, .row input:focus-visible, .row select:focus
   <p class="spec-kind"><span class="hz-chip">適用期限：短線（1～5 天）</span>回測（2016–2026、大型股）：標題熱門、[標的]文看多看空，之後 1～20 天都沒有穩定的方向；只觀察，不當依據。</p>
   <div class="tbl-wrap"><table class="hold-tbl">
     <thead><tr><th>#</th><th>股票</th><th>閒聊提及</th><th>文章數</th><th>收盤</th><th>漲跌</th></tr></thead>
-    <tbody><tr><td>1</td><td><b>台積電</b><small>2330</small></td><td>16</td><td>2</td><td>nan</td><td class="down">+nan%</td></tr><tr><td>2</td><td><b>台郡</b><small>6269</small></td><td>17</td><td>0</td><td>nan</td><td class="down">+nan%</td></tr><tr><td>3</td><td><b>禾伸堂</b><small>3026</small></td><td>10</td><td>0</td><td>nan</td><td class="down">+nan%</td></tr><tr><td>4</td><td><b>南亞</b><small>1303</small></td><td>8</td><td>0</td><td>nan</td><td class="down">+nan%</td></tr><tr><td>5</td><td><b>南亞科</b><small>2408</small></td><td>3</td><td>1</td><td>nan</td><td class="down">+nan%</td></tr><tr><td>6</td><td><b>中鋼</b><small>2002</small></td><td>7</td><td>0</td><td>nan</td><td class="down">+nan%</td></tr><tr><td>7</td><td><b>台塑化</b><small>6505</small></td><td>2</td><td>1</td><td>nan</td><td class="down">+nan%</td></tr><tr><td>8</td><td><b>聯詠</b><small>3034</small></td><td>0</td><td>1</td><td>nan</td><td class="down">+nan%</td></tr><tr><td>9</td><td><b>凌航</b><small>3135</small></td><td>0</td><td>1</td><td>nan</td><td class="down">+nan%</td></tr><tr><td>10</td><td><b>捷敏-KY</b><small>6525</small></td><td>0</td><td>1</td><td>nan</td><td class="down">+nan%</td></tr></tbody></table></div>
+    <tbody><tr><td>1</td><td><b>台積電</b><small>2330</small></td><td>16</td><td>2</td><td>nan</td><td class="down">+nan%</td></tr><tr><td>2</td><td><b>台郡</b><small>6269</small></td><td>17</td><td>0</td><td>nan</td><td class="down">+nan%</td></tr><tr><td>3</td><td><b>禾伸堂</b><small>3026</small></td><td>10</td><td>0</td><td>nan</td><td class="down">+nan%</td></tr><tr><td>4</td><td><b>南亞</b><small>1303</small></td><td>8</td><td>0</td><td>nan</td><td class="down">+nan%</td></tr><tr><td>5</td><td><b>南亞科</b><small>2408</small></td><td>3</td><td>1</td><td>nan</td><td class="down">+nan%</td></tr><tr><td>6</td><td><b>台塑化</b><small>6505</small></td><td>2</td><td>1</td><td>nan</td><td class="down">+nan%</td></tr><tr><td>7</td><td><b>中鋼</b><small>2002</small></td><td>7</td><td>0</td><td>nan</td><td class="down">+nan%</td></tr><tr><td>8</td><td><b>川湖</b><small>2059</small></td><td>0</td><td>1</td><td>nan</td><td class="down">+nan%</td></tr><tr><td>9</td><td><b>凌航</b><small>3135</small></td><td>0</td><td>1</td><td>nan</td><td class="down">+nan%</td></tr><tr><td>10</td><td><b>捷敏-KY</b><small>6525</small></td><td>0</td><td>1</td><td>nan</td><td class="down">+nan%</td></tr></tbody></table></div>
   <h3>營收創 3 年新高</h3>
   <p class="spec-kind"><span class="hz-chip">適用期限：中長線（1～3 個月）</span>2016 年後之後一個月平均比其他大型股強，更早不明顯（證據有一點）。</p>
   <p class="msg">最新一個月營收創 3 年新高的股票（股票池約 55 檔）：鴻海（9 月 +38%）、日月光投控（9 月 +46%）、南亞（9 月 +55%）、欣興（9 月 +65%）、聯電（9 月 +27%）、緯穎（9 月 +100%）、奇鋐（9 月 +45%）、國巨（9 月 +46%）、聯詠（9 月 +25%）、和碩（9 月 +87%）、萬海（9 月 +98%）、世芯-KY（9 月 +496%）、台塑化（9 月 +66%）、致茂（9 月 +206%）、創意（9 月 +98%）、矽力*-KY（9 月 +51%）。每月 11 日起（大家都公布後）開始記錄追蹤。</p>
   <h3>接近跌停</h3>
-  <p class="spec-kind"><span class="hz-chip">適用期限：短線（5 天）</span>大型股當天跌 9% 以上，隔天開盤買、抱 5 天，平均比其他大型股多約 1～2 個百分點、說對約 56%；2015 年前很穩，2016 年後次數少、起伏大（證據有一點）。</p>
-  <p class="msg">今天收盤跌 9% 以上的大型股（股票池約 55 檔）：沒有。回測（2004–2026）：隔天開盤買、抱 5 天，2004–2015 年平均多約 1.0 個百分點（t 5.8），2016 年後平均多約 2.0 個百分點但次數少（約 500 次）、集中在大跌的日子（t 1.3）。這類股票通常有壞消息，隔天也可能繼續跌，只適合小部位、嚴守 5 天出場。</p>
+  <p class="spec-kind"><span class="hz-chip">適用期限：短線（5 天）</span>大型股當天跌 9% 以上，隔天開盤買、抱 5 天，平均比其他大型股多約 1～2 個百分點、說對約 57%；2015 年前很穩，2016 年後次數少、起伏大（證據有一點）。</p>
+  <p class="msg">今天收盤跌 9% 以上的大型股（股票池約 55 檔）：沒有。回測（2004–2026、約 55 檔大型股，比其他大型股）：隔天開盤買、抱 5 天，2004–2015 年平均多約 0.9 個百分點（t 6.6），2016 年後平均多約 2.1 個百分點但次數少（約 490 次）、集中在大跌的日子（t 1.2）；說對都約 57%。這類股票通常有壞消息，隔天也可能繼續跌，只適合小部位、嚴守 5 天出場。</p>
   <h3>川普發文（提到台灣、晶片、台積電、關稅或中國，近 48 小時，英文原文）</h3><p class="spec-kind"><span class="hz-chip">適用期限：極短線（當天）</span>沒有回測：對台股的影響方向不一定，常常很快就被市場消化，只供注意。資料來源：trumpstruth.org 的 Truth Social 存檔。</p><ul class="trump"><li class="msg">近 48 小時沒有相關發文。</li></ul>
   <h3>追蹤結果（相對 0050，各期限）</h3>
   <div class="tbl-wrap"><table class="hold-tbl spec-track-tbl"><thead><tr><th>訊號</th><th>極短線<small>當天</small></th><th>隔天<small>1 天</small></th><th>短線<small>5 天</small></th><th>波段<small>20 天</small></th><th>中長線<small>60 天</small></th></tr></thead><tbody><tr><td><b>開盤跳空股</b><small>適用：極短線（當天）</small></td><td class="na">累積中</td><td class="na">累積中</td><td class="na">累積中</td><td class="na">累積中</td><td class="na">累積中</td></tr><tr><td><b>PTT 股版熱門</b><small>適用：短線（1～5 天）</small></td><td class="na">不適用</td><td class="na">累積中</td><td class="na">累積中</td><td class="na">累積中</td><td class="na">累積中</td></tr><tr><td><b>營收創 3 年新高</b><small>適用：中長線（1～3 個月）</small></td><td class="na">不適用</td><td class="na">累積中</td><td class="na">累積中</td><td class="na">累積中</td><td class="na">累積中</td></tr><tr><td><b>接近跌停</b><small>適用：短線（5 天）</small></td><td class="na">不適用</td><td class="na">累積中</td><td class="na">累積中</td><td class="na">累積中</td><td class="na">累積中</td></tr></tbody></table></div>
@@ -647,6 +652,7 @@ a:focus-visible, .btn:focus-visible, .row input:focus-visible, .row select:focus
     <li><b>財報反應</b>：看財報後第一天股價比 0050 多漲或多跌多少，規則跟美股日報一樣。台股近 10 年有效、更早不明顯，證據比月營收弱。</li>
     <li><b>短線（1～5 天）</b>：財報反應強之後 5 天，2016 年後平均比其他大型股多約 0.7%，更早不明顯（證據有一點）。<b>極短線（當天）</b>：開盤跳空 ≥ 3% 的股票當天傾向回補，兩段期間都成立，但扣掉成本與時間差後所剩不多，放在投機觀察區。</li>
     <li><b>長線（半年以上）</b>：高殖利率、低本益比、低股價淨值比都測過（2005–2026），沒有兩段期間都成立的效果；2016 年後高殖利率股反而落後大盤。所以長線只給分散、定期定額的原則。</li>
+    <li><b>大跌時要不要加碼？</b>0050 從一年高點跌 10% 以上時買，一年後平均比平常買多一些，但起伏很大、統計上不可靠（2009–2026）；美股 2000–2015 年跌 10% 就進場，常常還會再跌。建議是<b>大跌時不要停扣</b>，但也不要把錢留著等大跌。</li>
     <li><b>三大法人、融資融券、投信作帳、除息後填息、美股前一晚漲跌、技術面動能</b>：都研究過，沒有兩段期間都成立的效果，所以只顯示、不當買賣依據。「營收創 3 年新高」和「除息前一個月」只在其中一段期間有效，標為證據「有一點」。</li>
     <li><b>持有／觀望</b>是平常的狀態：走勢偏強就持有，不明或偏弱就觀望。走勢判斷本身<b>無法預測</b>漲跌。<b>看錯的訊號</b>是事先講好的價位，收盤跌破就代表「偏多」的判斷錯了。</li>
     <li>價格是新台幣；顏色照台股習慣：<span class="up">紅色是漲</span>、<span class="down">綠色是跌</span>。</li>
