@@ -1,0 +1,630 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>台股十大日報</title>
+<link rel="manifest" href="../manifest.webmanifest">
+<meta name="theme-color" content="#0d1b33">
+<link rel="icon" type="image/png" href="../icon-192.png">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="台股日報">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@700;900&display=swap">
+<style>/* 美股十大日報：深藍報頭（像看盤看板）＋白色內容卡。台股習慣紅漲綠跌。 */
+:root {
+  --bg: #f2f4f7;
+  --card: #ffffff;
+  --ink: #121a26;
+  --ink-2: #4c5768;
+  --ink-3: #8a93a2;
+  --line: #e2e6ec;
+  --brand: #1b3158;
+  --gold: #c9a24a;
+  --up: #d6363b;
+  --up-soft: #fdecec;
+  --down: #12895a;
+  --down-soft: #e2f4ea;
+  --wait: #6b7480;
+  --wait-soft: #edf0f3;
+  --warn: #b56b00;
+  --warn-soft: #fdf2dd;
+  --shadow: 0 1px 2px rgba(18, 26, 38, .04), 0 4px 16px rgba(18, 26, 38, .06);
+  --hero-1: #0d1b33;
+  --hero-2: #17305a;
+  --hero-ink: #f4f7fb;
+  --hero-ink-2: #a9b8cf;
+  --hero-up: #ff7b7b;
+  --hero-down: #4fd99a;
+  --font-body: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+  --font-head: "Noto Serif TC", "Songti TC", "PMingLiU", serif;
+  --font-num: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0c1118; --card: #141b25; --ink: #e7ecf2; --ink-2: #a9b4c2; --ink-3: #748093; --line: #253041;
+    --brand: #9cc0f5; --gold: #d9b764; --up: #ff6a6a; --up-soft: #3a1c20; --down: #34cf8b; --down-soft: #11301f;
+    --wait: #9aa5b2; --wait-soft: #1f2732; --warn: #f2b34c; --warn-soft: #34280f;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 4px 16px rgba(0, 0, 0, .25);
+    --hero-1: #070e1b; --hero-2: #10213f; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0c1118; --card: #141b25; --ink: #e7ecf2; --ink-2: #a9b4c2; --ink-3: #748093; --line: #253041;
+  --brand: #9cc0f5; --gold: #d9b764; --up: #ff6a6a; --up-soft: #3a1c20; --down: #34cf8b; --down-soft: #11301f;
+  --wait: #9aa5b2; --wait-soft: #1f2732; --warn: #f2b34c; --warn-soft: #34280f;
+  --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 4px 16px rgba(0, 0, 0, .25);
+  --hero-1: #070e1b; --hero-2: #10213f; color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { scroll-behavior: smooth; scroll-padding-top: 64px; }
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 16px; line-height: 1.7; }
+h1, h2, h3 { margin: 0; line-height: 1.3; text-wrap: balance; }
+p { margin: 0; }
+a { color: var(--brand); }
+.up { color: var(--up); }
+.down { color: var(--down); }
+.num { font-family: var(--font-num); font-variant-numeric: tabular-nums; }
+
+/* ---------- 報頭 ---------- */
+.hero {
+  color: var(--hero-ink);
+  background:
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, .035) 0 1px, transparent 1px 72px),
+    linear-gradient(160deg, var(--hero-1), var(--hero-2));
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 36px 28px;
+}
+.hero-in { max-width: 1080px; margin: 0 auto; display: grid; gap: 22px; }
+.hero .date { font-size: .85rem; letter-spacing: .06em; color: var(--gold); }
+.hero h1 { font-family: var(--font-head); font-weight: 900; font-size: clamp(2.1rem, 6vw, 3.2rem); letter-spacing: .04em; margin-top: 4px; }
+.hero .sub { color: var(--hero-ink-2); margin-top: 6px; max-width: 36em; }
+.market { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.idx {
+  background: rgba(255, 255, 255, .06); border: 1px solid rgba(255, 255, 255, .1); border-radius: 14px;
+  padding: 14px 16px; display: grid; gap: 2px; min-width: 0;
+}
+.idx .n { font-size: .8rem; color: var(--hero-ink-2); }
+.idx .p { font-family: var(--font-num); font-size: 1.6rem; font-weight: 600; font-variant-numeric: tabular-nums; }
+.idx .c { font-family: var(--font-num); font-size: .9rem; }
+.hero .up { color: var(--hero-up); }
+.hero .down { color: var(--hero-down); }
+.mood { color: var(--hero-ink-2); font-size: .95rem; border-left: 3px solid var(--gold); padding-left: 12px; }
+.mood b { color: var(--hero-ink); }
+.stale { background: var(--warn-soft); color: var(--warn); border-radius: 10px; padding: 8px 12px; font-weight: 500; }
+
+/* ---------- 導覽列 ---------- */
+.nav {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 10;
+  background: color-mix(in srgb, var(--card) 88%, transparent); backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line);
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.nav-in { max-width: 1080px; margin: 0 auto; display: flex; gap: 4px; overflow-x: auto; scrollbar-width: none; padding-block: 8px; }
+.nav a {
+  flex: none; text-decoration: none; color: var(--ink-2); font-size: .9rem; font-weight: 500;
+  padding: 6px 14px; border-radius: 999px;
+}
+.nav a:hover { background: var(--wait-soft); color: var(--ink); }
+
+/* ---------- 版面 ---------- */
+.wrap {
+  max-width: 1080px; margin: 0 auto; display: grid; gap: 32px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 28px 56px;
+}
+.stack { display: grid; gap: 32px; }
+.split { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 24rem), 1fr)); gap: 20px; align-items: start; }
+.panel, .mine {
+  background: var(--card); border: 1px solid var(--line); border-radius: 16px; box-shadow: var(--shadow);
+  padding: 22px; display: grid; gap: 14px; min-width: 0;
+}
+.panel h2, .mine h2 { font-family: var(--font-head); font-size: 1.3rem; font-weight: 700; }
+.panel > p { color: var(--ink-2); }
+.advice { border-top: 4px solid var(--up); }
+.points { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+.points li { display: grid; grid-template-columns: 2.1rem minmax(0, 1fr); gap: 12px; align-items: start; }
+.dot { width: 2.1rem; height: 2.1rem; border-radius: 50%; display: grid; place-items: center; font-weight: 700; font-size: .85rem; }
+.dot.up { background: var(--up-soft); }
+.dot.down { background: var(--down-soft); }
+.dot.warn { background: var(--warn-soft); color: var(--warn); }
+
+/* ---------- 分組與卡片 ---------- */
+.group { display: grid; gap: 14px; }
+.group-head { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.group-head h2 { font-family: var(--font-head); font-size: 1.45rem; font-weight: 900; }
+.group-head span { color: var(--ink-3); font-size: .9rem; }
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 20rem), 1fr)); gap: 16px; }
+.stock {
+  position: relative; background: var(--card); border: 1px solid var(--line); border-radius: 16px; box-shadow: var(--shadow);
+  padding: 18px 18px 16px 22px; display: grid; gap: 12px; align-content: start; min-width: 0; overflow: hidden;
+}
+.stock::before { content: ""; position: absolute; inset: 0 auto 0 0; width: 5px; background: var(--line); }
+.stock.act-buy::before { background: var(--up); }
+.stock.act-sell::before { background: var(--down); }
+.stock.act-hold::before { background: color-mix(in srgb, var(--up) 45%, var(--line)); }
+.top { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+.name b { font-size: 1.25rem; font-weight: 900; display: block; line-height: 1.2; }
+.name small { color: var(--ink-3); font-family: var(--font-num); font-size: .8rem; letter-spacing: .04em; }
+.price { text-align: right; }
+.price .p { font-family: var(--font-num); font-size: 1.3rem; font-weight: 600; display: block; font-variant-numeric: tabular-nums; }
+.price .c { font-family: var(--font-num); font-size: .9rem; }
+.tag { display: inline-block; font-weight: 700; font-size: .85rem; padding: 3px 12px; border-radius: 999px; width: fit-content; }
+.tag.buy { background: var(--up-soft); color: var(--up); }
+.tag.avoid { background: var(--down-soft); color: var(--down); }
+.tag.hold { background: var(--wait-soft); color: var(--wait); }
+.stock.act-buy .tag { background: var(--up); color: #fff; }
+.stock.act-sell .tag { background: var(--down); color: #fff; }
+.why { margin: 0; padding: 0; list-style: none; display: grid; gap: 4px; font-size: .95rem; }
+.why li { padding-left: 1.1em; position: relative; }
+.why li::before { content: "›"; position: absolute; left: 0; color: var(--ink-3); font-weight: 700; }
+.line { font-size: .88rem; color: var(--ink-2); background: var(--bg); border-radius: 10px; padding: 10px 12px; display: grid; gap: 4px; }
+.line:empty { display: none; }
+.line b { color: var(--ink); font-weight: 500; }
+.plan { display: block; background: var(--up-soft); color: var(--ink); border-radius: 8px; padding: 8px 10px; margin-bottom: 4px; }
+.plan small { display: block; color: var(--ink-3); font-size: .78rem; margin-top: 4px; }
+.alert { font-size: .85rem; background: var(--warn-soft); color: var(--warn); border-radius: 8px; padding: 6px 10px; }
+.news { font-size: .88rem; border-top: 1px dashed var(--line); padding-top: 8px; }
+.news summary { cursor: pointer; color: var(--brand); font-weight: 500; }
+.news ul { margin: 8px 0 0; padding-left: 1.1em; display: grid; gap: 8px; }
+.news a { color: var(--ink); text-decoration: none; }
+.news a:hover { text-decoration: underline; }
+.news small { display: block; color: var(--ink-3); font-size: .78rem; }
+
+/* ---------- 我的清單 ---------- */
+.mine { border: 2px solid var(--brand); }
+.row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.row label { color: var(--ink-2); font-size: .9rem; }
+.row input, .row select {
+  font: inherit; padding: 8px 12px; border: 1px solid var(--line); border-radius: 10px;
+  background: var(--bg); color: var(--ink); min-width: 0;
+}
+.row input[type=number] { width: 8rem; }
+#mTicker { width: 12rem; }
+.btn { font: inherit; font-weight: 500; padding: 8px 18px; border-radius: 10px; border: 1px solid var(--brand); background: var(--brand); color: var(--card); cursor: pointer; }
+.btn.ghost { background: transparent; color: var(--brand); }
+.btn.small { padding: 3px 12px; font-size: .85rem; }
+.btn:hover { filter: brightness(1.08); }
+.msg { font-size: .9rem; color: var(--ink-2); }
+.tbl-wrap { overflow-x: auto; }
+.hold-tbl { width: 100%; border-collapse: collapse; font-size: .9rem; }
+.hold-tbl th, .hold-tbl td { padding: 10px 8px; border-bottom: 1px solid var(--line); text-align: right; white-space: nowrap; }
+.hold-tbl th:first-child, .hold-tbl td:first-child { text-align: left; }
+.hold-tbl th { color: var(--ink-3); font-weight: 500; font-size: .78rem; letter-spacing: .04em; }
+.hold-tbl td { font-family: var(--font-num); font-variant-numeric: tabular-nums; }
+.hold-tbl td small { display: block; color: var(--ink-3); font-size: .72rem; }
+.hold-tbl tbody tr:hover { background: var(--bg); }
+.mine .rm { position: absolute; top: 12px; right: 12px; }
+.mine .stock .top { padding-right: 3.6rem; }
+
+/* ---------- 投機觀察區：虛線框＋斜紋，跟正式建議明顯區隔 ---------- */
+.spec {
+  border: 2px dashed var(--warn); box-shadow: none;
+  background: repeating-linear-gradient(135deg, var(--card) 0 14px, color-mix(in srgb, var(--warn-soft) 55%, var(--card)) 14px 15px);
+}
+.spec h2 { color: var(--warn); }
+.spec h3 { font-size: 1rem; margin-top: 6px; }
+.spec-warn { background: var(--warn-soft); color: var(--ink); border-radius: 10px; padding: 10px 14px; }
+.spec-track { margin: 0; padding-left: 1.2em; display: grid; gap: 6px; color: var(--ink-2); }
+.spec .hold-tbl td small { display: inline; margin-left: 6px; }
+
+/* ---------- 說明與頁尾 ---------- */
+.how ul { margin: 0; padding-left: 1.2em; display: grid; gap: 8px; color: var(--ink-2); }
+.how b { color: var(--ink); }
+footer { text-align: center; font-size: .82rem; color: var(--ink-3); line-height: 1.8; }
+
+a:focus-visible, .btn:focus-visible, .row input:focus-visible, .row select:focus-visible, summary:focus-visible {
+  outline: 2px solid var(--brand); outline-offset: 2px;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .stock { transition: transform .15s ease, box-shadow .15s ease; }
+  .stock:hover { transform: translateY(-2px); }
+}
+@media (max-width: 560px) {
+  .hero { padding-block: 26px 22px; }
+  .market { gap: 8px; }
+  .idx { padding: 10px; border-radius: 12px; }
+  .idx .p { font-size: 1.1rem; }
+  .panel, .mine { padding: 18px; }
+  .wrap { gap: 24px; }
+}
+
+/* ---------- 盤前／盤中快訊 ---------- */
+.live { background: var(--card); border: 2px solid var(--gold); border-radius: 16px; box-shadow: var(--shadow); padding: 20px 22px; display: grid; gap: 12px; }
+.live-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 14px; }
+.live-head h2 { font-family: var(--font-head); font-size: 1.35rem; }
+.live-head span { color: var(--ink-3); font-size: .85rem; }
+.live-head h2::before { content: ""; display: inline-block; width: .6em; height: .6em; border-radius: 50%; background: var(--up); margin-right: .45em; vertical-align: .1em; }
+.live-note { color: var(--ink-2); font-size: .88rem; }
+.live-idx { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { display: grid; gap: 0; padding: 8px 12px; border: 1px solid var(--line); border-radius: 12px; background: var(--bg); min-width: 7.5rem; }
+.chip span { font-size: .75rem; color: var(--ink-3); }
+.chip b { font-family: var(--font-num); font-size: 1.05rem; }
+.chip span.up, .chip span.down { font-family: var(--font-num); font-size: .82rem; }
+.live-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr)); gap: 16px; }
+.live h3 { font-size: .95rem; margin-bottom: 6px; }
+.live-movers { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; font-size: .92rem; }
+.live-movers small, .live .hold-tbl small { color: var(--ink-3); }
+@media (prefers-reduced-motion: no-preference) {
+  .live-head h2::before { animation: pulse 1.6s ease-in-out infinite; }
+  @keyframes pulse { 50% { opacity: .3; } }
+}
+
+/* ---------- 短線／波段／長線 ---------- */
+.hz { border: 1px solid var(--line); border-radius: 10px; overflow: hidden; font-size: .86rem; }
+.hz-row { display: grid; grid-template-columns: 4.6rem minmax(0, 1fr) auto; gap: 8px; align-items: center; padding: 6px 10px; border-bottom: 1px solid var(--line); }
+.hz-k { font-weight: 700; line-height: 1.2; }
+.hz-k small { display: block; font-weight: 400; color: var(--ink-3); font-size: .72rem; }
+.hz-v { min-width: 0; }
+.hz-v.up { color: var(--up); font-weight: 500; }
+.hz-v.down { color: var(--down); font-weight: 500; }
+.hz-e { font-size: .72rem; color: var(--ink-3); background: var(--wait-soft); border-radius: 999px; padding: 1px 8px; white-space: nowrap; }
+.hz-ref { padding: 6px 10px; color: var(--ink-3); font-size: .78rem; background: var(--bg); }
+
+/* ---------- 投機區的期限標示 ---------- */
+.hz-chip { display: inline-block; font-size: .78rem; font-weight: 700; color: var(--warn); background: var(--warn-soft);
+  border: 1px solid color-mix(in srgb, var(--warn) 40%, transparent); border-radius: 999px; padding: 1px 10px; margin-right: 8px; }
+.spec-kind { color: var(--ink-2); font-size: .9rem; }
+.spec-track-tbl th small, .spec-track-tbl td small { display: block; color: var(--ink-3); font-size: .72rem; font-weight: 400; }
+.spec-track-tbl td.na { color: var(--ink-3); font-size: .8rem; }
+.live-spec { border-top: 1px dashed var(--warn); padding-top: 10px; }
+
+/* ---------- 超強反應 ---------- */
+.super-chip { display: inline-block; font-size: .75rem; font-weight: 700; color: #fff; background: linear-gradient(90deg, var(--up), var(--gold));
+  border-radius: 999px; padding: 1px 10px; margin: 0 4px; vertical-align: .05em; }
+.super-h { font-size: 1.05rem; margin-top: 10px; }
+.nav a.mkt { margin-left: auto; color: var(--brand); font-weight: 700; white-space: nowrap; }
+.line small { display: block; color: var(--ink-3); font-size: .78rem; }
+</style>
+</head>
+<body>
+<header class="hero">
+ <div class="hero-in">
+  <div class="masthead">
+    <div>
+      <span class="date">2026 年 10 月 20 日（二）台股收盤｜當天 16:30 更新</span>
+      <h1>台股十大日報</h1>
+      <p class="sub">每天幫你看台股市值最大的 10 家公司：今天發生什麼事、哪些走勢偏強、哪些先避開。</p>
+    </div>
+  </div>
+  <section class="market" aria-label="大盤"><div class="idx"><span class="n">加權指數</span><span class="p">46,292.93</span><span class="c down">▼ 1.13%</span></div><div class="idx"><span class="n">元大台灣50（0050）</span><span class="p">107.25</span><span class="c down">▼ 0.83%</span></div></section>
+  <p class="mood"><b>大盤氣氛：偏多。</b>加權指數在長期趨勢線之上。</p>
+  <p class="stale" id="stale" data-bar="2026-10-20" hidden></p>
+  <script>
+  (function () {
+    var el = document.getElementById("stale"), bar = new Date(el.getAttribute("data-bar") + "T13:30:00+08:00");
+    var days = Math.floor((Date.now() - bar.getTime()) / 86400000);
+    if (days > 4) { el.textContent = "注意：資料已經 " + days + " 天沒有更新，內容可能過時。"; el.hidden = false; }
+  })();
+  </script>
+ </div>
+</header>
+<nav class="nav" aria-label="頁面導覽"><div class="nav-in">
+  <a href="#mine">我的清單</a><a href="#advice">今日建議</a><a href="#today">今天重點</a><a href="#top10">十大股票</a><a href="#score">成績單</a><a href="#how">怎麼看</a><a class="mkt" href="../">美股日報 →</a>
+</div></nav>
+<main class="wrap">
+<script>window.__names = {"2330": "台積電", "2454": "聯發科", "2308": "台達電", "2317": "鴻海", "3711": "日月光投控", "1303": "南亞", "2881": "富邦金", "3037": "欣興", "2882": "國泰金", "2303": "聯電", "2382": "廣達", "2891": "中信金", "2412": "中華電", "6669": "緯穎", "2345": "智邦", "3231": "緯創", "2886": "兆豐金", "2357": "華碩", "1216": "統一", "2603": "長榮", "3017": "奇鋐", "2884": "玉山金", "2885": "元大金", "2892": "第一金", "2880": "華南金", "5880": "合庫金", "2890": "永豐金", "2883": "凱基金", "2887": "台新金", "3008": "大立光", "2327": "國巨", "2379": "瑞昱", "3034": "聯詠", "2002": "中鋼", "1301": "台塑", "2207": "和泰車", "2395": "研華", "4938": "和碩", "2301": "光寶科", "2912": "統一超", "1101": "台泥", "2609": "陽明", "2615": "萬海", "3045": "台灣大", "4904": "遠傳", "3661": "世芯-KY", "5871": "中租-KY", "6505": "台塑化", "1326": "台化", "2059": "川湖", "3653": "健策", "2360": "致茂", "3443": "創意", "6415": "矽力*-KY", "0050": "元大台灣50", "^TWII": "加權指數"};</script>
+
+<section class="live" id="live" hidden aria-live="polite">
+  <div class="live-head"><h2 id="liveTitle">盤前快訊</h2><span id="liveTime"></span></div>
+  <p class="live-note">建議與分析仍以前一個交易日收盤為準；這裡只更新即時價格。</p>
+  <div class="live-idx" id="liveIdx"></div>
+  <div class="live-grid">
+    <div><h3>十大股票</h3><div class="tbl-wrap"><table class="hold-tbl" id="liveTop"></table></div></div>
+    <div><h3>漲跌最大（股票池約 55 檔）</h3><ul class="live-movers" id="liveMovers"></ul>
+      <p class="msg" id="liveEarn" hidden></p></div>
+  </div>
+  <div class="live-spec" id="liveGap" hidden>
+    <h3><span class="hz-chip">投機・極短線（當天）</span>盤前跳空股</h3>
+    <ul class="live-movers" id="liveGapList"></ul>
+    <p class="msg">排除財報前後，盤前漲跌超過 2% 的前 3 名，看<b>當天回補</b>：上漲看空、下跌看多，只看當天開盤到收盤。回測平均每筆約 0.16%、說對 53%，幅度很小；追蹤結果在下方「投機觀察區」。</p>
+  </div>
+</section>
+<script>
+(function () {
+  var bar = document.getElementById("stale").getAttribute("data-bar");
+  function pct(v) { return '<span class="' + (v >= 0 ? "up" : "down") + '">' + (v >= 0 ? "▲ " : "▼ ") + Math.abs(v).toFixed(2) + "%</span>"; }
+  function money(v) { return v.toLocaleString("zh-TW", { maximumFractionDigits: 2 }); }
+  fetch("live.json", { cache: "no-store" }).then(function (r) { return r.ok ? r.json() : null; }).then(function (L) {
+    if (!L || new Date(L.asof) <= new Date(bar + "T13:30:00+08:00")) return;  // 比收盤日報舊就不顯示
+    window.__live = L;
+    var names = window.__names || {}, q = L.quotes;
+    var tw = new Date(L.asof).toLocaleString("zh-TW", { timeZone: "Asia/Taipei", month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit", hour12: false });
+    document.getElementById("liveTitle").textContent = L.label + "快訊";
+    document.getElementById("liveTime").textContent = tw + " 更新";
+    document.getElementById("liveIdx").innerHTML = Object.keys(L.indices).map(function (t) {
+      var x = L.indices[t]; return '<div class="chip"><span>' + x.name + '</span><b>' + x.price.toLocaleString("en-US", { maximumFractionDigits: 2 }) + "</b>" + pct(x.chg) + "</div>";
+    }).join("");
+    document.getElementById("liveTop").innerHTML = "<thead><tr><th>股票</th><th>價格</th><th>漲跌</th><th>時間</th></tr></thead><tbody>" +
+      L.watchlist.map(function (t) {
+        var x = q[t]; return "<tr><td>" + (names[t] || t) + " <small>" + t + "</small></td>" +
+          (x ? "<td>" + money(x.price) + "</td><td>" + pct(x.chg) + "</td><td>" + x.time + "</td>" : '<td colspan="3">尚無成交</td>') + "</tr>";
+      }).join("") + "</tbody>";
+    var ranked = Object.keys(q).filter(function (t) { return !(t in L.indices); }).sort(function (a, b) { return q[b].chg - q[a].chg; });
+    var pick = ranked.slice(0, 3).concat(ranked.slice(-3).reverse());
+    document.getElementById("liveMovers").innerHTML = pick.map(function (t) {
+      return "<li><b>" + (names[t] || t) + "</b> <small>" + t + "</small> " + pct(q[t].chg) + "</li>";
+    }).join("");
+    if (L.earnings_today.length) {
+      var e = document.getElementById("liveEarn"); e.hidden = false;
+      e.textContent = "今天公布財報：" + L.earnings_today.map(function (t) { return (names[t] || t) + "（" + t + "）"; }).join("、") + "。財報後第一天的反應會在收盤後的日報判斷。";
+    }
+    if (L.mode === "pre" && L.gaps && L.gaps.length) {
+      document.getElementById("liveGapList").innerHTML = L.gaps.map(function (t) {
+        return "<li><b>" + (names[t] || t) + "</b> <small>" + t + "</small> 盤前 " + pct(q[t].chg) +
+          (q[t].chg > 0 ? "　→ 極短線看回落" : "　→ 極短線看反彈") + "</li>";
+      }).join("");
+      document.getElementById("liveGap").hidden = false;
+    }
+    document.getElementById("live").hidden = false;
+    if (window.__mylistRender) window.__mylistRender();
+  }).catch(function () {});
+})();
+</script>
+
+
+<section class="mine" id="mine" aria-labelledby="h-mine">
+  <div class="group-head"><h2 id="h-mine">我的清單</h2><span>資料只存在這台裝置的瀏覽器，不會上傳</span></div>
+  <div class="row">
+    <label for="mUser">使用者</label>
+    <select id="mUser"></select>
+    <button class="btn ghost small" id="mNewUser" type="button">新增使用者</button>
+    <button class="btn ghost small" id="mDelUser" type="button">刪除這個使用者</button>
+  </div>
+  <div class="row" id="mNewUserRow" hidden>
+    <input id="mNewName" placeholder="使用者名稱，例如：爸爸" maxlength="20">
+    <button class="btn small" id="mNewOk" type="button">建立</button>
+  </div>
+  <form class="row" id="mForm">
+    <input id="mTicker" list="mList" placeholder="股票代號，例如 2330" autocomplete="off" required>
+    <datalist id="mList"></datalist>
+    <input id="mShares" type="number" min="0" step="any" placeholder="股數（選填）">
+    <input id="mCost" type="number" min="0" step="any" placeholder="買進均價（選填）">
+    <button class="btn" type="submit">加入</button>
+  </form>
+  <p class="msg" id="mMsg">有填股數就算持股（會算損益），沒填就是觀察清單。可選台股市值前約 55 大，1 張 = 1000 股。</p>
+  <div class="tbl-wrap" id="mHold" hidden></div>
+  <div class="cards" id="mCards"></div>
+</section>
+<script>
+(function () {
+  var KEY = "twd-users-v1", data = null, state = load();
+  function load() {
+    try { var s = JSON.parse(localStorage.getItem(KEY)); if (s && s.users) return s; } catch (e) {}
+    return { current: "我", users: { "我": [] } };
+  }
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {} }
+  function $(id) { return document.getElementById(id); }
+  function esc(t) { var d = document.createElement("div"); d.textContent = t; return d.innerHTML; }
+  function money(v) { return v.toLocaleString("zh-TW", { maximumFractionDigits: 2 }); }
+  function list() { return state.users[state.current] || (state.users[state.current] = []); }
+
+  function renderUsers() {
+    var sel = $("mUser"); sel.innerHTML = "";
+    Object.keys(state.users).forEach(function (u) {
+      var o = document.createElement("option"); o.value = u; o.textContent = u; o.selected = u === state.current; sel.appendChild(o);
+    });
+    $("mDelUser").hidden = Object.keys(state.users).length < 2;
+  }
+
+  function render() {
+    renderUsers();
+    var items = list(), cards = $("mCards"), hold = $("mHold");
+    if (!data) { cards.innerHTML = '<p class="msg">正在讀取今天的資料…</p>'; return; }
+    if (!items.length) {
+      cards.innerHTML = '<p class="msg">「' + esc(state.current) + '」還沒有清單。在上面輸入代號（例如 2330、2317、2881）加入。</p>';
+      hold.hidden = true; return;
+    }
+    var rows = "", tv = 0, tc = 0, html = "", trades = [];
+    items.forEach(function (it, i) {
+      var d = data.stocks[it.t]; if (!d) return;
+      var L = window.__live, lq = L && L.quotes[it.t], px = lq ? lq.price : d.close;
+      if (d.action === "buy" || d.action === "sell") trades.push(d.name + "（" + it.t + "）" + (d.action === "buy" ? "可考慮買進" : "先別買"));
+      html += d.card.replace(/(<article class="stock[^"]*">)/, '$1<button class="btn ghost small rm" type="button" data-i="' + i + '">移除</button>');
+      if (it.sh > 0) {
+        var v = it.sh * px, line = '<td>' + esc(d.name) + ' ' + it.t + '</td><td>' + it.sh + '</td><td>' + money(px) + '</td><td>' + money(v) + '</td>';
+        tv += v;
+        if (it.cost > 0) {
+          var c = it.sh * it.cost, pl = v - c, cls = pl >= 0 ? "up" : "down";
+          tc += c;
+          line += '<td class="' + cls + '">' + (pl >= 0 ? "+" : "") + money(pl).replace("$-", "-$") + '（' + (pl / c * 100).toFixed(1) + '%）</td>';
+        } else { line += '<td>—</td>'; }
+        rows += '<tr>' + line + '</tr>';
+      }
+    });
+    if (rows) {
+      var sum = tc > 0 ? ((tv - tc) >= 0 ? "+" : "") + ((tv - tc) / tc * 100).toFixed(1) + "%" : "—";
+      hold.innerHTML = '<table class="hold-tbl"><thead><tr><th>持股</th><th>股數</th><th>' + (window.__live ? window.__live.label + '價' : '收盤價') + '</th><th>市值</th><th>損益（依買進均價）</th></tr></thead><tbody>' + rows +
+        '<tr><td><b>合計</b></td><td></td><td></td><td>' + money(tv) + '</td><td>' + sum + '</td></tr></tbody></table>';
+      hold.hidden = false;
+    } else { hold.hidden = true; }
+    var head = trades.length ? '<p class="alert">你的清單今天有建議：' + esc(trades.join("、")) + '</p>' : "";
+    cards.innerHTML = head + html;
+  }
+
+  function msg(t) { $("mMsg").textContent = t; }
+
+  $("mForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var raw = $("mTicker").value.trim().toUpperCase().split(/\s/)[0].replace(/\.TWO?$/, "");
+    if (!data || !data.stocks[raw]) { msg("找不到「" + raw + "」。目前只能選台股市值前約 55 大，可以從下拉清單挑。"); return; }
+    var sh = parseFloat($("mShares").value) || 0, cost = parseFloat($("mCost").value) || 0, items = list();
+    var old = items.filter(function (x) { return x.t === raw; })[0];
+    if (old) { old.sh = sh; old.cost = cost; msg("已更新 " + raw + "。"); }
+    else { items.push({ t: raw, sh: sh, cost: cost }); msg("已加入 " + raw + (sh > 0 ? "（持股）" : "（觀察）") + "。"); }
+    $("mTicker").value = ""; $("mShares").value = ""; $("mCost").value = "";
+    save(); render();
+  });
+  $("mCards").addEventListener("click", function (e) {
+    var b = e.target.closest(".rm"); if (!b) return;
+    var it = list().splice(+b.getAttribute("data-i"), 1)[0]; save(); render(); msg("已移除 " + it.t + "。");
+  });
+  $("mUser").addEventListener("change", function () { state.current = this.value; save(); render(); msg("切換到「" + state.current + "」。"); });
+  $("mNewUser").addEventListener("click", function () { $("mNewUserRow").hidden = false; $("mNewName").focus(); });
+  $("mNewOk").addEventListener("click", function () {
+    var n = $("mNewName").value.trim();
+    if (!n) { msg("請輸入使用者名稱。"); return; }
+    if (state.users[n]) { msg("「" + n + "」已經存在。"); return; }
+    state.users[n] = []; state.current = n; $("mNewName").value = ""; $("mNewUserRow").hidden = true; save(); render();
+    msg("已建立「" + n + "」，可以開始加入股票。");
+  });
+  var armed = false;
+  $("mDelUser").addEventListener("click", function () {
+    if (!armed) { armed = true; this.textContent = "再按一次確認刪除「" + state.current + "」"; return; }
+    armed = false; this.textContent = "刪除這個使用者";
+    var gone = state.current; delete state.users[gone]; state.current = Object.keys(state.users)[0]; save(); render();
+    msg("已刪除「" + gone + "」。");
+  });
+
+  window.__mylistRender = render;
+  render();
+  fetch("data.json", { cache: "no-store" }).then(function (r) { return r.json(); }).then(function (d) {
+    data = d;
+    window.__names = {}; Object.keys(d.stocks).forEach(function (t) { window.__names[t] = d.stocks[t].name; });
+    var dl = $("mList");
+    Object.keys(d.stocks).sort().forEach(function (t) { var o = document.createElement("option"); o.value = t; o.label = d.stocks[t].name; dl.appendChild(o); });
+    render();
+  }).catch(function () { $("mCards").innerHTML = '<p class="msg">讀不到今天的資料，請稍後重新整理。</p>'; });
+})();
+</script>
+
+<div class="split">
+<section class="panel advice" id="advice"><h2>十大股票今日建議</h2><ul class="points"><li><span class="dot up">買</span><p><b>南亞（1303）可考慮買進</b>，最晚 11/17 賣出、跌破 257.89 先停損。9 月營收比去年同月 +55.3%，比過去一年的平均高 1.9 個標準差，走勢也同方向。</p></li><li><span class="dot up">買</span><p><b>日月光投控（3711）可考慮買進</b>，最晚 11/17 賣出、跌破 598.6 先停損。9 月營收比去年同月 +45.5%，比過去一年的平均高 1.8 個標準差，走勢也同方向。</p></li><li><span class="dot down">避</span><p><b>台達電（2308）先別買</b>，有效到 11/11。9 月營收比去年同月 +14.6%，比過去一年的平均低 3.5 個標準差，走勢也同方向。</p></li></ul></section>
+<section class="panel" id="today"><h2>今天的重點</h2><ul class="points"><li><span class="dot down">▼</span><p><b>南亞（1303）</b>短期動能轉弱。</p></li><li><span class="dot down">▼</span><p><b>富邦金（2881）</b>短期動能轉弱。</p></li><li><span class="dot down">▼</span><p><b>國泰金（2882）</b>短期動能轉弱。</p></li><li><span class="dot down">▼</span><p><b>欣興（3037）</b>股價跌破中期平均價。</p></li><li><span class="dot warn">!</span><p><b>欣興（3037）7 天後公布財報。</b>財報後第一天的反應會列入買賣建議。</p></li></ul></section>
+</div>
+<div id="top10" class="stack">
+<section class="group">
+  <div class="group-head"><h2 class="up">可考慮買進</h2><span>2 檔｜波段（約 1 個月）建議｜月營收或財報後的反應好，走勢也偏強</span></div>
+  <div class="cards">
+    <article class="stock act-buy">
+      <div class="top"><div class="name"><b>南亞</b><small>1303</small></div><div class="price"><span class="p">296</span><span class="c down">▼ 2.47%</span></div></div>
+      <span class="tag buy">波段：可考慮買進｜走勢偏強｜10 檔中最強</span>
+      <div class="hz"><div class="hz-row"><span class="hz-k">短線<small>1～5 天</small></span><span class="hz-v ">沒有訊號</span><span class="hz-e">證據：台股沒有驗證</span></div><div class="hz-row"><span class="hz-k">波段<small>約 1 個月</small></span><span class="hz-v up">可考慮買進（附何時賣）</span><span class="hz-e">證據：有一點</span></div><div class="hz-row"><span class="hz-k">長線<small>半年以上</small></span><span class="hz-v ">沒有可靠的選股訊號，適合分散、定期定額（例如 0050）</span><span class="hz-e">證據：沒有</span></div><div class="hz-ref">長線參考：長期趨勢向上、本益比 48、近一年殖利率 0.3%</div></div>
+      <ul class="why"><li>長期走勢向上</li><li>中長期走勢同步向上</li><li>離一年來最高點跌了 16%</li></ul>
+      <div class="line"><span><span class="plan"><b>何時賣：</b>最晚 <b>11/17</b> 收盤賣出（買進後第 20 個交易日）；在那之前收盤跌破 <b>257.89</b> 就提早賣出停損。<small>以 10/20 第一次出現建議時的收盤價 296 計算。停損是保險，不是加分。</small></span></span><span><b>月營收：</b>9 月營收比去年同月 +55.3%，比過去一年的平均高 1.9 個標準差（<span class="up"><b>驚喜</b></span>）；還有 15 個交易日參考價值較高</span><span><b>看錯的訊號：</b>收盤跌破 239.62</span><span><b>分析師平均目標價：</b>323.88（還有 9% 空間）</span><span><b>三大法人（張）：</b>外資 今天 <span class="down">-5,125</span>、近 5 天 <span class="down">-57,637</span>｜投信 今天 <span class="down">-1,662</span>、近 5 天 <span class="up">+11,001</span><small>研究：法人買賣超對之後一個月的漲跌沒有可靠預測力，僅供參考</small></span></div>
+      <span class="line" style="border:0;padding:0">下次財報 11/10（21 天後）</span><details class="news"><summary>最新新聞（4 則）</summary><ul><li><a href="https://www.ctee.com.tw/news/20261020701943-430201" target="_blank" rel="noopener">南亞高檔震盪外資目標價共識升級- 證券</a><small>工商時報｜10/20</small></li><li><a href="https://www.cmoney.tw/forum/article/186292833" target="_blank" rel="noopener">1303 南亞 - 同學問題南亞350有機會嗎後面還有4支影片在排播- 股市爆料同學會</a><small>CMoney｜10/20</small></li><li><a href="https://www.cmoney.tw/forum/article/186216403" target="_blank" rel="noopener">8358 金居- 大摩認為金居合理股價達730元，EPS較高的南亞該多少呢- 股市爆料同學會</a><small>CMoney｜10/19</small></li><li><a href="https://wantrich.chinatimes.com/news/20261020900001-420101" target="_blank" rel="noopener">南亞沒他香？台塑、台化、台塑化...3寶拉回撿誰 龍頭投顧按讚「這檔」：目標價跳升28％</a><small>旺得富理財網｜10/19</small></li></ul></details>
+    </article>
+    <article class="stock act-buy">
+      <div class="top"><div class="name"><b>日月光投控</b><small>3711</small></div><div class="price"><span class="p">660</span><span class="c down">▼ 1.49%</span></div></div>
+      <span class="tag buy">波段：可考慮買進｜走勢偏強</span>
+      <div class="hz"><div class="hz-row"><span class="hz-k">短線<small>1～5 天</small></span><span class="hz-v ">沒有訊號</span><span class="hz-e">證據：台股沒有驗證</span></div><div class="hz-row"><span class="hz-k">波段<small>約 1 個月</small></span><span class="hz-v up">可考慮買進（附何時賣）</span><span class="hz-e">證據：有一點</span></div><div class="hz-row"><span class="hz-k">長線<small>半年以上</small></span><span class="hz-v ">沒有可靠的選股訊號，適合分散、定期定額（例如 0050）</span><span class="hz-e">證據：沒有</span></div><div class="hz-ref">長線參考：長期趨勢向上、本益比 50</div></div>
+      <ul class="why"><li>長期走勢向上</li><li>中長期走勢同步向上</li><li>離一年來最高點跌了 14%</li></ul>
+      <div class="line"><span><span class="plan"><b>何時賣：</b>最晚 <b>11/17</b> 收盤賣出（買進後第 20 個交易日）；在那之前收盤跌破 <b>598.6</b> 就提早賣出停損。<small>以 10/20 第一次出現建議時的收盤價 660 計算。停損是保險，不是加分。</small></span></span><span><b>月營收：</b>9 月營收比去年同月 +45.5%，比過去一年的平均高 1.8 個標準差（<span class="up"><b>驚喜</b></span>）；還有 16 個交易日參考價值較高</span><span><b>看錯的訊號：</b>收盤跌破 646.02</span><span><b>分析師平均目標價：</b>757.39（還有 15% 空間）</span><span><b>三大法人（張）：</b>外資 今天 <span class="down">-1,958</span>、近 5 天 <span class="down">-25,924</span>｜投信 今天 <span class="up">+599</span>、近 5 天 <span class="up">+3,477</span><small>研究：法人買賣超對之後一個月的漲跌沒有可靠預測力，僅供參考</small></span></div>
+      <span class="alert">10/29（9 天後）公布財報，財報前後波動會變大</span><details class="news"><summary>最新新聞（3 則）</summary><ul><li><a href="https://www.sinotrade.com.tw/richclub/MarketTrends/%E4%B8%89%E5%A4%A7%E6%B3%95%E4%BA%BA%E8%B2%B7%E8%B3%A3%E8%B6%85-%E2%80%93-%E5%A4%96%E8%B3%87%E8%B2%B7%E8%B6%85-3711-%E6%97%A5%E6%9C%88%E5%85%89%E6%8A%95%E6%8E%A7--2382-%E5%BB%A3%E9%81%94-%E6%8A%95%E4%BF%A1%E8%B2%B7%E8%B6%85-2360-%E8%87%B4%E8%8C%82--1815-%E5%AF%8C%E5%96%AC-%E6%B3%95%E4%BA%BA%E5%90%88%E8%A8%88%E8%B2%B7%E8%B6%85220-81%E5%84%84%E5%85%83--0909--6aa11e7c9533d535cbd28c74?strProd=0210&amp;strWeb=0090&amp;invt=&amp;s=" target="_blank" rel="noopener">三大法人買賣超 – 外資買超(3711)日月光投控、(2382)廣達，投信買超(2360)致茂、(1815)富喬，法人合計買超220.81億元</a><small>永豐金證券｜10/20</small></li><li><a href="https://stock.ltn.com.tw/article/a77ney1bntmx" target="_blank" rel="noopener">營收速報》日月光投控營收 首度突破800億元</a><small>自由時報｜10/19</small></li><li><a href="https://www.pocket.tw/school/articles/7383/" target="_blank" rel="noopener">2026 半導體投資指南：AI晶片量產潮！日月光投控（3711）先進封裝</a><small>口袋證券｜10/19</small></li></ul></details>
+    </article>
+  </div>
+</section>
+<section class="group">
+  <div class="group-head"><h2 class="down">先別買</h2><span>1 檔｜波段（約 1 個月）建議｜月營收或財報後的反應差、走勢也偏弱；不是叫你賣，只是現在不適合買進</span></div>
+  <div class="cards">
+    <article class="stock act-sell">
+      <div class="top"><div class="name"><b>台達電</b><small>2308</small></div><div class="price"><span class="p">1,605</span><span class="c down">▼ 2.13%</span></div></div>
+      <span class="tag avoid">波段：先別買｜走勢偏弱｜10 檔中最弱</span>
+      <div class="hz"><div class="hz-row"><span class="hz-k">短線<small>1～5 天</small></span><span class="hz-v ">沒有訊號</span><span class="hz-e">證據：台股沒有驗證</span></div><div class="hz-row"><span class="hz-k">波段<small>約 1 個月</small></span><span class="hz-v down">先別買</span><span class="hz-e">證據：有一點</span></div><div class="hz-row"><span class="hz-k">長線<small>半年以上</small></span><span class="hz-v ">沒有可靠的選股訊號，適合分散、定期定額（例如 0050）</span><span class="hz-e">證據：沒有</span></div><div class="hz-ref">長線參考：長期趨勢不明、本益比 51、近一年殖利率 0.7%</div></div>
+      <ul class="why"><li>價格跌破長期平均價，長期趨勢向下</li><li>近兩三個月轉弱，價格在中期平均價之下</li><li>離一年來最高點跌了 38%</li></ul>
+      <div class="line"><span><b>建議有效到：</b>11/11（事件後 20 個交易日，之後回到持有／觀望）</span><span><b>月營收：</b>9 月營收比去年同月 +14.6%，比過去一年的平均低 3.5 個標準差（<span class="down"><b>失望</b></span>）；還有 16 個交易日參考價值較高</span><span><b>轉強訊號：</b>收盤站回 1,695.52</span><span><b>分析師平均目標價：</b>2,500（還有 56% 空間）</span><span><b>三大法人（張）：</b>外資 今天 <span class="down">-3,501</span>、近 5 天 <span class="down">-18,536</span>｜投信 今天 <span class="up">+604</span>、近 5 天 <span class="up">+1,734</span><small>研究：法人買賣超對之後一個月的漲跌沒有可靠預測力，僅供參考</small></span></div>
+      <span class="alert">10/28（8 天後）公布財報，財報前後波動會變大</span><details class="news"><summary>最新新聞（4 則）</summary><ul><li><a href="https://www.peoplenews.tw/articles/investment-financialmgmt/62630" target="_blank" rel="noopener">台股跌529點！欣興重挫近6%、台達電跌逾2% 三大法人狂賣968億</a><small>民報｜10/20</small></li><li><a href="https://www.cmoney.tw/forum/article/186295481" target="_blank" rel="noopener">2308 台達電- 外資賣超795億元主動式、市值型及高息ETF齊遭大賣- 股市爆料同學會</a><small>CMoney｜10/20</small></li><li><a href="https://ww2.money-link.com.tw/realtimenews/NewsContent.aspx?SN=6336599001&amp;PU=1002" target="_blank" rel="noopener">《證交所》今日單一證券鉅額成交股票：台達電、台積電、愛普*</a><small>富聯網｜10/20</small></li><li><a href="https://www.cmoney.tw/forum/article/186280789" target="_blank" rel="noopener">2308 台達電- AI 基建需求狂飆！OCP 設備市場2030 年挑戰9,000 億美元- 股市爆料同學會</a><small>CMoney｜10/20</small></li></ul></details>
+    </article>
+  </div>
+</section>
+<section class="group">
+  <div class="group-head"><h2 class="up">持有</h2><span>2 檔｜波段（約 1 個月）建議｜走勢偏強，已持有可續抱，但沒有新的買進訊號</span></div>
+  <div class="cards">
+    <article class="stock act-hold">
+      <div class="top"><div class="name"><b>富邦金</b><small>2881</small></div><div class="price"><span class="p">153.5</span><span class="c down">▼ 3.15%</span></div></div>
+      <span class="tag hold">波段：持有｜走勢偏強</span>
+      <div class="hz"><div class="hz-row"><span class="hz-k">短線<small>1～5 天</small></span><span class="hz-v ">沒有訊號</span><span class="hz-e">證據：台股沒有驗證</span></div><div class="hz-row"><span class="hz-k">波段<small>約 1 個月</small></span><span class="hz-v ">持有</span><span class="hz-e">證據：有一點</span></div><div class="hz-row"><span class="hz-k">長線<small>半年以上</small></span><span class="hz-v ">沒有可靠的選股訊號，適合分散、定期定額（例如 0050）</span><span class="hz-e">證據：沒有</span></div><div class="hz-ref">長線參考：長期趨勢向上、本益比 20、近一年殖利率 2.7%</div></div>
+      <ul class="why"><li>長期走勢向上</li><li>中長期走勢同步向上</li><li>離一年來最高點跌了 7%</li></ul>
+      <div class="line"><span><b>月營收：</b>9 月營收比去年同月 -45.4%，比過去一年的平均高 0.2 個標準差（<span class=""><b>正常</b></span>）</span><span><b>看錯的訊號：</b>收盤跌破 145.73</span><span><b>分析師平均目標價：</b>137.8（已經超過目標價 10%）</span><span><b>三大法人（張）：</b>外資 今天 <span class="down">-4,963</span>、近 5 天 <span class="down">-1,249</span>｜投信 今天 <span class="down">-425</span>、近 5 天 <span class="down">-3,617</span><small>研究：法人買賣超對之後一個月的漲跌沒有可靠預測力，僅供參考</small></span></div>
+      <span class="line" style="border:0;padding:0">下次財報 11/26（37 天後）</span><details class="news"><summary>最新新聞（4 則）</summary><ul><li><a href="https://www.ttv.com.tw/finance/view/10202620095696A8142E7B9E4F91BE7C2054ED39F38B1818/587" target="_blank" rel="noopener">富邦金美股盤前後交易上線，雪梨據點拓企業金融</a><small>台視全球資訊網｜10/20</small></li><li><a href="https://www.cmoney.tw/forum/article/186216404" target="_blank" rel="noopener">富邦金賺錢未能穩住台股</a><small>CMoney｜10/19</small></li><li><a href="https://www.cmoney.tw/forum/article/186171522" target="_blank" rel="noopener">富邦金 富邦金控代子公司富邦證券公告處分(轉租)使用權資產予富邦閩投</a><small>CMoney｜10/19</small></li><li><a href="https://tw.tradingview.com/news/cnyes:4c641f110acdf:0/" target="_blank" rel="noopener">鉅亨速報 - Factset 最新調查：富邦金(2881-TW)EPS預估上修至11.58元，預估目標價為145元</a><small>TradingView｜10/19</small></li></ul></details>
+    </article>
+    <article class="stock act-hold">
+      <div class="top"><div class="name"><b>國泰金</b><small>2882</small></div><div class="price"><span class="p">110</span><span class="c down">▼ 3.93%</span></div></div>
+      <span class="tag hold">波段：持有｜走勢偏強</span>
+      <div class="hz"><div class="hz-row"><span class="hz-k">短線<small>1～5 天</small></span><span class="hz-v ">沒有訊號</span><span class="hz-e">證據：台股沒有驗證</span></div><div class="hz-row"><span class="hz-k">波段<small>約 1 個月</small></span><span class="hz-v ">持有</span><span class="hz-e">證據：有一點</span></div><div class="hz-row"><span class="hz-k">長線<small>半年以上</small></span><span class="hz-v ">沒有可靠的選股訊號，適合分散、定期定額（例如 0050）</span><span class="hz-e">證據：沒有</span></div><div class="hz-ref">長線參考：長期趨勢向上、本益比 17、近一年殖利率 3.1%</div></div>
+      <ul class="why"><li>長期走勢向上</li><li>中長期走勢同步向上</li><li>離一年來最高點跌了 7%</li></ul>
+      <div class="line"><span><b>月營收：</b>9 月營收比去年同月 -41.2%，比過去一年的平均高 0.1 個標準差（<span class=""><b>正常</b></span>）</span><span><b>看錯的訊號：</b>收盤跌破 108.31</span><span><b>分析師平均目標價：</b>119.98（還有 9% 空間）</span><span><b>三大法人（張）：</b>外資 今天 <span class="down">-7,371</span>、近 5 天 <span class="down">-3,483</span>｜投信 今天 <span class="down">-426</span>、近 5 天 <span class="up">+241</span><small>研究：法人買賣超對之後一個月的漲跌沒有可靠預測力，僅供參考</small></span></div>
+      <details class="news"><summary>最新新聞（4 則）</summary><ul><li><a href="https://cmnews.com.tw/article/heyurui-5a0840f5-cc59-11f1-89e0-ba156fd8143c" target="_blank" rel="noopener">國泰金(2882)調查寫下三項新高，消費信心能否跟著擴散？-孔明投資長</a><small>CMoney投資網誌｜10/20</small></li><li><a href="https://finance.biggo.com.tw/news/bb5cab04-5ae8-4f09-8b35-36d885f17033" target="_blank" rel="noopener">國泰金調查：近半民眾感受經濟成長紅利，四成二靠投資獲利</a><small>BigGo 財經｜10/20</small></li><li><a href="https://www.ttv.com.tw/finance/view/102026200959A57E17DF59AF42C6B6F2BCE65E9EC71ECE12/587" target="_blank" rel="noopener">國泰金房貸塗銷數位化，私銀產品再添私募股權</a><small>台視全球資訊網｜10/20</small></li><li><a href="https://news.wearn.com/c2128585.html" target="_blank" rel="noopener">經濟成長11%誰最有感？國泰金調查：42%民眾靠投資獲利 僅1成受惠薪資增長</a><small>聚財網｜10/20</small></li></ul></details>
+    </article>
+  </div>
+</section>
+<section class="group">
+  <div class="group-head"><h2 class="" style="color:var(--wait)">觀望</h2><span>5 檔｜波段（約 1 個月）建議｜走勢不明或偏弱，先不動作</span></div>
+  <div class="cards">
+    <article class="stock act-wait">
+      <div class="top"><div class="name"><b>聯發科</b><small>2454</small></div><div class="price"><span class="p">4,150</span><span class="c down">▼ 1.31%</span></div></div>
+      <span class="tag hold">波段：觀望｜方向不明</span>
+      <div class="hz"><div class="hz-row"><span class="hz-k">短線<small>1～5 天</small></span><span class="hz-v ">沒有訊號</span><span class="hz-e">證據：台股沒有驗證</span></div><div class="hz-row"><span class="hz-k">波段<small>約 1 個月</small></span><span class="hz-v ">觀望</span><span class="hz-e">證據：有一點</span></div><div class="hz-row"><span class="hz-k">長線<small>半年以上</small></span><span class="hz-v ">沒有可靠的選股訊號，適合分散、定期定額（例如 0050）</span><span class="hz-e">證據：沒有</span></div><div class="hz-ref">長線參考：長期趨勢向上、本益比 69、近一年殖利率 0.6%</div></div>
+      <ul class="why"><li>長期走勢向上</li><li>近兩三個月轉弱，價格在中期平均價之下</li><li>離一年來最高點跌了 24%</li></ul>
+      <div class="line"><span><b>月營收：</b>9 月營收比去年同月 +2.0%，比過去一年的平均低 0.4 個標準差（<span class=""><b>正常</b></span>）</span><span><b>轉強訊號：</b>收盤站上 4,414.40</span><span><b>轉弱訊號：</b>收盤跌破 3,115.71</span><span><b>分析師平均目標價：</b>6,075（還有 46% 空間）</span><span><b>三大法人（張）：</b>外資 今天 <span class="down">-1,566</span>、近 5 天 <span class="down">-14,738</span>｜投信 今天 <span class="up">+296</span>、近 5 天 <span class="up">+1,617</span><small>研究：法人買賣超對之後一個月的漲跌沒有可靠預測力，僅供參考</small></span></div>
+      <span class="alert">10/30（10 天後）公布財報，財報前後波動會變大</span><details class="news"><summary>最新新聞（4 則）</summary><ul><li><a href="https://www.cmoney.tw/forum/article/186292269" target="_blank" rel="noopener">2454 聯發科 - 【金包銀之聯發科：IC設計龍頭量縮拉回，多空震盪進行換手】 - 股市爆料同學會</a><small>CMoney｜10/20</small></li><li><a href="https://cmnews.com.tw/article/cmoney-a76e3179-cc5d-11f1-b618-e26aa2820381" target="_blank" rel="noopener">高檔獲利 20.7 億先下車、近期回檔又連買九天——用4步驟找出聯發科（2454）的關鍵主力</a><small>CMoney投資網誌｜10/20</small></li><li><a href="https://tw.stock.yahoo.com/news/%E5%8F%B0%E8%82%A1%E6%85%98%E8%B7%8C529%E9%BB%9E-%E5%8F%B0%E7%A9%8D%E9%9B%BB%E8%B7%8C15%E5%85%83-%E8%81%AF%E7%99%BC%E7%A7%91-%E9%B4%BB%E6%B5%B7%E6%8C%AB%E9%80%BE1-%E5%8F%B0%E9%81%94%E9%9B%BB%E6%B7%AA%E9%87%8D%E7%81%BD%E5%8D%80%E5%A4%A7%E8%B7%8C2-055500052.html" target="_blank" rel="noopener">台股慘跌529點！台積電跌15元、聯發科、鴻海挫逾1% 台達電淪重災區大跌2.13%</a><small>Yahoo股市｜10/20</small></li><li><a href="https://www.cmoney.tw/forum/article/186266049" target="_blank" rel="noopener">2454 聯發科 - 為何這麼心狠手辣📉📉📉 - 股市爆料同學會</a><small>CMoney｜10/20</small></li></ul></details>
+    </article>
+    <article class="stock act-wait">
+      <div class="top"><div class="name"><b>欣興</b><small>3037</small></div><div class="price"><span class="p">1,055</span><span class="c down">▼ 5.80%</span></div></div>
+      <span class="tag hold">波段：觀望｜方向不明</span>
+      <div class="hz"><div class="hz-row"><span class="hz-k">短線<small>1～5 天</small></span><span class="hz-v ">沒有訊號</span><span class="hz-e">證據：台股沒有驗證</span></div><div class="hz-row"><span class="hz-k">波段<small>約 1 個月</small></span><span class="hz-v ">觀望</span><span class="hz-e">證據：有一點</span></div><div class="hz-row"><span class="hz-k">長線<small>半年以上</small></span><span class="hz-v ">沒有可靠的選股訊號，適合分散、定期定額（例如 0050）</span><span class="hz-e">證據：沒有</span></div><div class="hz-ref">長線參考：長期趨勢向上、本益比 69、近一年殖利率 0.2%</div></div>
+      <ul class="why"><li>長期走勢向上</li><li>近兩三個月轉弱，價格在中期平均價之下</li><li>離一年來最高點跌了 26%</li></ul>
+      <div class="line"><span><b>月營收：</b>9 月營收比去年同月 +64.7%，比過去一年的平均高 2.5 個標準差（<span class="up"><b>驚喜</b></span>）；還有 14 個交易日參考價值較高</span><span><b>轉強訊號：</b>收盤站上 1,083.04</span><span><b>轉弱訊號：</b>收盤跌破 759.76</span><span><b>分析師平均目標價：</b>1,317（還有 25% 空間）</span><span><b>三大法人（張）：</b>外資 今天 <span class="down">-2,531</span>、近 5 天 <span class="down">-15,035</span>｜投信 今天 <span class="up">+707</span>、近 5 天 <span class="up">+4,280</span><small>研究：法人買賣超對之後一個月的漲跌沒有可靠預測力，僅供參考</small></span></div>
+      <span class="alert">10/27（7 天後）公布財報，財報前後波動會變大</span><details class="news"><summary>最新新聞（4 則）</summary><ul><li><a href="https://www.cmoney.tw/forum/article/186293006" target="_blank" rel="noopener">3037 欣興- 【00415A】10/20 操作日報｜逢低全面加碼，鎖定AI散熱與載板- 股市爆料同學會</a><small>CMoney｜10/20</small></li><li><a href="https://www.cmoney.tw/forum/article/186274513" target="_blank" rel="noopener">3037 欣興 - 載板兄弟跌倒很心酸😔 財經專家你們說的載板會漲 今天怎麼跌... - 股市爆料同學會</a><small>CMoney｜10/20</small></li><li><a href="https://www.ctee.com.tw/news/20261020701297-430502" target="_blank" rel="noopener">載板關鍵材料恐缺兩成欣興簡山傑：上下游走向生態系合作- 產業</a><small>工商時報｜10/20</small></li><li><a href="https://today.line.me/tw/v3/article/RBKJZVY" target="_blank" rel="noopener">《TPCA展》欣興董座:PCB產業角色轉為技術賦能者| MoneyDJ理財網</a><small>LINE TODAY｜10/20</small></li></ul></details>
+    </article>
+    <article class="stock act-wait">
+      <div class="top"><div class="name"><b>台積電</b><small>2330</small></div><div class="price"><span class="p">2,405</span><span class="c down">▼ 0.62%</span></div></div>
+      <span class="tag hold">波段：觀望｜方向不明</span>
+      <div class="hz"><div class="hz-row"><span class="hz-k">短線<small>1～5 天</small></span><span class="hz-v ">沒有訊號</span><span class="hz-e">證據：台股沒有驗證</span></div><div class="hz-row"><span class="hz-k">波段<small>約 1 個月</small></span><span class="hz-v ">觀望</span><span class="hz-e">證據：有一點</span></div><div class="hz-row"><span class="hz-k">長線<small>半年以上</small></span><span class="hz-v ">沒有可靠的選股訊號，適合分散、定期定額（例如 0050）</span><span class="hz-e">證據：沒有</span></div><div class="hz-ref">長線參考：長期趨勢向上、本益比 25、近一年殖利率 0.2%</div></div>
+      <ul class="why"><li>長期走勢向上</li><li>近兩三個月轉弱，價格在中期平均價之下</li><li>離一年來最高點跌了 7%</li></ul>
+      <div class="line"><span><b>月營收：</b>9 月營收比去年同月 +54.6%，比過去一年的平均高 1.3 個標準差（<span class="up"><b>驚喜</b></span>）；還有 14 個交易日參考價值較高</span><span><b>財報反應：</b><span class="down"><b>弱</b></span>（財報後第一天比 0050 多跌 0.9%，z -1.3，還有 18 個交易日參考價值較高）</span><span><b>轉強訊號：</b>收盤站上 2,436.45</span><span><b>轉弱訊號：</b>收盤跌破 2,147.80</span><span><b>分析師平均目標價：</b>3,387（還有 41% 空間）</span><span><b>三大法人（張）：</b>外資 今天 <span class="down">-9,365</span>、近 5 天 <span class="down">-82,109</span>｜投信 今天 <span class="up">+1,030</span>、近 5 天 <span class="up">+9,660</span><small>研究：法人買賣超對之後一個月的漲跌沒有可靠預測力，僅供參考</small></span></div>
+      <span class="line" style="border:0;padding:0">下次財報 1/14（86 天後）</span><details class="news"><summary>最新新聞（4 則）</summary><ul><li><a href="https://www.sinotrade.com.tw/richclub/MarketTrends/%E4%B8%89%E5%A4%A7%E6%B3%95%E4%BA%BA%E8%B2%B7%E8%B3%A3%E8%B6%85-%E2%80%93-%E5%A4%96%E8%B3%87%E8%B2%B7%E8%B6%85-3231-%E7%B7%AF%E5%89%B5--3026-%E7%A6%BE%E4%BC%B8%E5%A0%82-%E6%8A%95%E4%BF%A1%E8%B2%B7%E8%B6%85-3017-%E5%A5%87%E9%8B%90--2330-%E5%8F%B0%E7%A9%8D%E9%9B%BB-%E6%B3%95%E4%BA%BA%E5%90%88%E8%A8%88%E8%B3%A3%E8%B6%85968-04%E5%84%84%E5%85%83--1020--6ad729b4dcb062010b975e98" target="_blank" rel="noopener">三大法人買賣超 – 外資買超(3231)緯創、(3026)禾伸堂，投信買超(3017)奇鋐、(2330)台積電，法人合計賣超968.04億元</a><small>永豐金證券｜10/20</small></li><li><a href="https://finance.ettoday.net/news/3257999" target="_blank" rel="noopener">外資續砍台股795億！再賣台積電　前十買賣超一次看</a><small>ETtoday財經雲｜10/20</small></li><li><a href="https://www.cmoney.tw/forum/article/186290449" target="_blank" rel="noopener">2330 台積電 - 台幣貶破32.6 股匯雙殺，週三結算季線守得住嗎？ - 股市爆料同學會</a><small>CMoney｜10/20</small></li><li><a href="https://tw.stock.yahoo.com/news/%E5%8F%B0%E8%82%A1%E4%B8%8D%E5%8F%AA5%E8%90%AC%E9%BB%9E%EF%BC%9F%E5%BC%B5%E9%8C%AB%E4%BC%B02028%E5%B9%B4%E6%8C%91%E6%88%B07%E8%90%AC%E9%BB%9E-%E5%8F%B0%E7%A9%8D%E9%9B%BB%E7%9C%8B5%E5%8D%83%E5%85%83-073839418.html" target="_blank" rel="noopener">台股不只5萬點？張錫估2028年挑戰7萬點 台積電看5千元</a><small>Yahoo股市｜10/20</small></li></ul></details>
+    </article>
+    <article class="stock act-wait">
+      <div class="top"><div class="name"><b>鴻海</b><small>2317</small></div><div class="price"><span class="p">241.5</span><span class="c up">▲ 0.84%</span></div></div>
+      <span class="tag hold">波段：觀望｜方向不明</span>
+      <div class="hz"><div class="hz-row"><span class="hz-k">短線<small>1～5 天</small></span><span class="hz-v ">沒有訊號</span><span class="hz-e">證據：台股沒有驗證</span></div><div class="hz-row"><span class="hz-k">波段<small>約 1 個月</small></span><span class="hz-v ">觀望</span><span class="hz-e">證據：有一點</span></div><div class="hz-row"><span class="hz-k">長線<small>半年以上</small></span><span class="hz-v ">沒有可靠的選股訊號，適合分散、定期定額（例如 0050）</span><span class="hz-e">證據：沒有</span></div><div class="hz-ref">長線參考：長期趨勢向上、本益比 16、近一年殖利率 3.0%</div></div>
+      <ul class="why"><li>長期走勢向上</li><li>近兩三個月轉弱，價格在中期平均價之下</li><li>離一年來最高點跌了 21%</li></ul>
+      <div class="line"><span><b>月營收：</b>9 月營收比去年同月 +38.4%，比過去一年的平均高 0.3 個標準差（<span class=""><b>正常</b></span>）</span><span><b>轉強訊號：</b>收盤站上 250.81</span><span><b>轉弱訊號：</b>收盤跌破 234.35</span><span><b>分析師平均目標價：</b>347.45（還有 44% 空間）</span><span><b>三大法人（張）：</b>外資 今天 <span class="up">+3,854</span>、近 5 天 <span class="up">+532</span>｜投信 今天 <span class="up">+968</span>、近 5 天 <span class="up">+3,348</span><small>研究：法人買賣超對之後一個月的漲跌沒有可靠預測力，僅供參考</small></span></div>
+      <span class="line" style="border:0;padding:0">下次財報 11/12（23 天後）</span><details class="news"><summary>最新新聞（4 則）</summary><ul><li><a href="https://www.cmoney.tw/forum/article/186301840" target="_blank" rel="noopener">2317 鴻海 - 【美股盤前】Netflix財報今晚登場，科技股能否再拉一段？（2026.10.20） - 股市爆料同學會</a><small>CMoney｜10/20</small></li><li><a href="https://www.cmoney.tw/forum/article/186292901" target="_blank" rel="noopener">2317 鴻海 - 【台股盤後】光通訊族群逆勢突圍，加權量縮跌逾五百點- 股市爆料同學會</a><small>CMoney｜10/20</small></li><li><a href="https://www.cmoney.tw/forum/article/186281910" target="_blank" rel="noopener">2317 鴻海 - 10個交易日，散戶和國安基金接下了三大法人的1兆元- 股市爆料同學會</a><small>CMoney｜10/20</small></li><li><a href="https://www.ftnn.com.tw/news/588781" target="_blank" rel="noopener">台股慘跌529點！台積電跌15元、聯發科、鴻海挫逾1% 台達電淪重災區大跌2.13%</a><small>FTNN 新聞網｜10/20</small></li></ul></details>
+    </article>
+    <article class="stock act-wait">
+      <div class="top"><div class="name"><b>聯電</b><small>2303</small></div><div class="price"><span class="p">127</span><span class="c down">▼ 3.42%</span></div></div>
+      <span class="tag hold">波段：觀望｜方向不明</span>
+      <div class="hz"><div class="hz-row"><span class="hz-k">短線<small>1～5 天</small></span><span class="hz-v ">沒有訊號</span><span class="hz-e">證據：台股沒有驗證</span></div><div class="hz-row"><span class="hz-k">波段<small>約 1 個月</small></span><span class="hz-v ">觀望</span><span class="hz-e">證據：有一點</span></div><div class="hz-row"><span class="hz-k">長線<small>半年以上</small></span><span class="hz-v ">沒有可靠的選股訊號，適合分散、定期定額（例如 0050）</span><span class="hz-e">證據：沒有</span></div><div class="hz-ref">長線參考：長期趨勢向上、本益比 19、近一年殖利率 2.0%</div></div>
+      <ul class="why"><li>長期走勢向上</li><li>近兩三個月轉弱，價格在中期平均價之下</li><li>離一年來最高點跌了 30%</li></ul>
+      <div class="line"><span><b>月營收：</b>9 月營收比去年同月 +27.2%，比過去一年的平均高 1.7 個標準差（<span class="up"><b>驚喜</b></span>）；還有 14 個交易日參考價值較高</span><span><b>轉強訊號：</b>收盤站上 136.49</span><span><b>轉弱訊號：</b>收盤跌破 103.13</span><span><b>分析師平均目標價：</b>145.7（還有 15% 空間）</span><span><b>三大法人（張）：</b>外資 今天 <span class="down">-18,620</span>、近 5 天 <span class="down">-77,110</span>｜投信 今天 <span class="down">-11,713</span>、近 5 天 <span class="down">-34,244</span><small>研究：法人買賣超對之後一個月的漲跌沒有可靠預測力，僅供參考</small></span></div>
+      <span class="alert">10/28（8 天後）公布財報，財報前後波動會變大</span><details class="news"><summary>最新新聞（4 則）</summary><ul><li><a href="https://news.tvbs.com.tw/money/4038817" target="_blank" rel="noopener">投信提款潮來了？穩懋遭砍20億 聯電、台塑化也難逃</a><small>TVBS新聞網｜10/20</small></li><li><a href="https://ww2.money-link.com.tw/realtimenews/NewsContent.aspx?SN=6336465001&amp;PU=0010" target="_blank" rel="noopener">《台北股市》投信20日賣超前十大 聯電萬張調節 傳產權值受重傷</a><small>富聯網｜10/20</small></li><li><a href="https://ww2.money-link.com.tw/RealtimeNews/NewsContent.aspx?sn=6336467001&amp;pu=News_0002_3" target="_blank" rel="noopener">《台北股市》三大法人20日賣超前十大 聯電累砍37萬張 友達淚眼相伴</a><small>富聯網｜10/20</small></li><li><a href="https://stock.ltn.com.tw/article/gsvn8p9tncge" target="_blank" rel="noopener">聯電又瀉3.42％！「這群人」聯手狂砍逾3萬張 百萬股東剉咧等</a><small>自由時報｜10/20</small></li></ul></details>
+    </article>
+  </div>
+</section></div>
+
+<section class="panel" id="score" aria-labelledby="h-score">
+  <h2 id="h-score">建議成績單</h2>
+  <p>每一次「可考慮買進／先別買」都會記下來，持有 20 個交易日後結算；買進建議若在期間收盤跌破停損價（進場價 − 2×ATR），就在那天提早結算。買進要<b>跑贏 0050</b>、先別買要<b>跑輸 0050</b>才算說對。</p>
+  <ul><li><b>實際紀錄</b>：買進 還沒有結算的紀錄；先別買 還沒有結算的紀錄。</li><li><b>研究</b>（2005–2026 年、約 55 檔台股大型股，比同一個月其他股票）：月營收驚喜＋走勢偏多的買進建議，前後兩段期間分別多 +1.0%、+1.4%；月營收失望＋走勢偏空的先別買，兩段都少約 0.9%。勝率都只有五成出頭。</li></ul>
+  <div class="tbl-wrap"><table class="hold-tbl"><thead><tr><th>日期</th><th>股票</th><th>建議</th><th>進場價</th><th>現價／結算價</th><th>相對 0050</th><th>狀態</th><th>來源</th></tr></thead><tbody><tr><td>10/20<small>2026</small></td><td>台達電 2308</td><td>先別買</td><td>1,605.00</td><td>1,605.00</td><td class="up">+0.0%</td><td>進行中｜對</td><td>實際</td></tr><tr><td>10/20<small>2026</small></td><td>日月光投控 3711</td><td>買進</td><td>660.00</td><td>660.00</td><td class="up">+0.0%</td><td>進行中｜錯</td><td>實際</td></tr><tr><td>10/20<small>2026</small></td><td>南亞 1303</td><td>買進</td><td>296.00</td><td>296.00</td><td class="up">+0.0%</td><td>進行中｜錯</td><td>實際</td></tr><tr><td>10/20<small>2026</small></td><td>中華電 2412</td><td>買進</td><td>154.50</td><td>154.50</td><td class="up">+0.0%</td><td>進行中｜錯</td><td>實際</td></tr><tr><td>10/20<small>2026</small></td><td>長榮 2603</td><td>買進</td><td>259.50</td><td>259.50</td><td class="up">+0.0%</td><td>進行中｜錯</td><td>實際</td></tr><tr><td>10/20<small>2026</small></td><td>聯詠 3034</td><td>買進</td><td>568.00</td><td>568.00</td><td class="up">+0.0%</td><td>進行中｜錯</td><td>實際</td></tr><tr><td>10/20<small>2026</small></td><td>中鋼 2002</td><td>買進</td><td>19.60</td><td>19.60</td><td class="up">+0.0%</td><td>進行中｜錯</td><td>實際</td></tr><tr><td>10/20<small>2026</small></td><td>和泰車 2207</td><td>買進</td><td>532.00</td><td>532.00</td><td class="up">+0.0%</td><td>進行中｜錯</td><td>實際</td></tr><tr><td>10/20<small>2026</small></td><td>和碩 4938</td><td>買進</td><td>105.00</td><td>105.00</td><td class="up">+0.0%</td><td>進行中｜錯</td><td>實際</td></tr><tr><td>10/20<small>2026</small></td><td>陽明 2609</td><td>買進</td><td>62.20</td><td>62.20</td><td class="up">+0.0%</td><td>進行中｜錯</td><td>實際</td></tr><tr><td>10/20<small>2026</small></td><td>萬海 2615</td><td>買進</td><td>117.00</td><td>117.00</td><td class="up">+0.0%</td><td>進行中｜錯</td><td>實際</td></tr><tr><td>10/20<small>2026</small></td><td>台灣大 3045</td><td>買進</td><td>130.50</td><td>130.50</td><td class="up">+0.0%</td><td>進行中｜錯</td><td>實際</td></tr><tr><td>10/20<small>2026</small></td><td>台塑化 6505</td><td>買進</td><td>106.50</td><td>106.50</td><td class="up">+0.0%</td><td>進行中｜錯</td><td>實際</td></tr><tr><td>10/20<small>2026</small></td><td>台化 1326</td><td>買進</td><td>73.80</td><td>73.80</td><td class="up">+0.0%</td><td>進行中｜錯</td><td>實際</td></tr><tr><td>10/20<small>2026</small></td><td>健策 3653</td><td>買進</td><td>6,650.00</td><td>6,650.00</td><td class="up">+0.0%</td><td>進行中｜錯</td><td>實際</td></tr><tr><td>10/20<small>2026</small></td><td>矽力*-KY 6415</td><td>買進</td><td>462.50</td><td>462.50</td><td class="up">+0.0%</td><td>進行中｜錯</td><td>實際</td></tr></tbody></table></div>
+  <p class="msg">表格只列最近 20 筆。過去表現不代表未來。</p>
+</section>
+<section class="panel how" id="how">
+  <h2>怎麼看這份日報</h2>
+  <ul>
+    <li><b>可考慮買進／先別買</b>只在「月營收」或「財報」公布後、而且和股價走勢同方向時出現，有效 20 個交易日。過去 20 年（約 55 檔大型股），月營收驚喜＋走勢偏強的股票，之後一個月比同時期其他大型股平均多約 1～1.4 個百分點，勝率五成出頭：是「平均多一點」，不是穩賺。「先別買」<b>不是叫你賣</b>，只是現在不適合買進。</li>
+    <li><b>可考慮買進</b>都附「何時賣」：最晚第 20 個交易日收盤賣出，在那之前收盤跌破停損價（進場價 − 2×ATR，ATR 是這檔股票平常一天的波動）就提早賣。</li>
+    <li><b>月營收</b>：上市公司每月 10 日前公布上個月營收。「驚喜」＝比去年同月的成長率，比過去一年的平均高出 1 個標準差以上。為了跟研究做法一致，11 日（大家都公布了）起才列入建議。</li>
+    <li><b>財報反應</b>：看財報後第一天股價比 0050 多漲或多跌多少，規則跟美股日報一樣。台股近 10 年有效、更早不明顯，證據比月營收弱。</li>
+    <li><b>三大法人</b>：只顯示給你參考。研究發現外資、投信買賣超對之後一個月的漲跌沒有穩定的預測力。</li>
+    <li><b>持有／觀望</b>是平常的狀態：走勢偏強就持有，不明或偏弱就觀望。走勢判斷本身<b>無法預測</b>漲跌。<b>看錯的訊號</b>是事先講好的價位，收盤跌破就代表「偏多」的判斷錯了。</li>
+    <li>價格是新台幣；顏色照台股習慣：<span class="up">紅色是漲</span>、<span class="down">綠色是跌</span>。</li>
+    <li>所有建議都是程式依規則產生的參考，請自行判斷，不要只看這個就下單。</li>
+  </ul>
+</section>
+<footer>本日報由程式自動產生，僅供參考，不構成投資建議。投資有風險，請自行判斷。<br>資料來源：Yahoo Finance（價格、財報）、FinMind（月營收、新聞）、臺灣證券交易所（三大法人）｜每週一至週五 16:30 更新、11:00 盤中快訊</footer>
+</main>
+</body>
+</html>
